@@ -17,9 +17,19 @@ class Player54():
         if depth >= 5:
             return board.evaluate(flag)
         valid_moves = board.find_valid_move_cells(old_move)
+        if (depth & 1) == 1:
+            ret = 1000000000
+        else:
+            ret = 0
         for move in valid_moves:
-
-
+            board.update(old_move, move, flag)
+            curr = self.minimax(board, move, flag, depth + 1)
+            board.backtrack_move(old_move, move)
+            if (depth & 1) == 1:
+                ret = min(ret, curr)
+            else:
+                ret = max(ret, curr)
+        return ret
     # bind to board
     def evaluate(board, flag):
         SCORE_BLOCK_WIN = 1000
@@ -43,5 +53,9 @@ class Player54():
                 else:
                     score -= SCORE_BLOCK_WIN
         pass
-    def backtrack_move(board):
+    def backtrack_move(board, old_move, new_move):
+        x = new_move[0]
+		y = new_move[1]
+        board.board_status[x][y] = '-'
+        board.block_status[x / 4][y / 4] = '-'
         pass
