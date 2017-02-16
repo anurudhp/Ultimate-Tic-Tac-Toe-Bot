@@ -1,0 +1,4 @@
+vs Random:
+	wrong heuristic with (10^10, 10^5, 10^0):	105	-	25	(first)
+												4	-	106	(second)
+	

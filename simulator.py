@@ -320,6 +320,9 @@ if __name__ == '__main__':
 		obj1 = team54.Player54()
 		obj2 = Random_Player()
 	elif option == '5':
+		obj1 = Random_Player()
+		obj2 = team54.Player54()
+	elif option == '6':
 		obj1 = team54.Player54()
 		obj2 = Manual_Player()
 	else:

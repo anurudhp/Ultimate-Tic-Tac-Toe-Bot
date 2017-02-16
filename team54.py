@@ -1,11 +1,11 @@
 import random
 
 def evaluate(board, flag):
-    SCORE_BLOCK_WIN = 1000
-    SCORE_THREE = 200
-    SCORE_TWO = 50
-    score = 0
+    SCORE_BLOCK_WIN = 10**10
+    SCORE_THREE     = 10**5
+    SCORE_TWO       = 10**0
 
+    score = 0
     oppflag = 'x' if flag == 'o' else 'x'
 
     for i in xrange(0, 4):
@@ -90,7 +90,7 @@ class Player54():
 
     # search functions
     def minimax(self, board, old_move, flag, depth):
-        INFINITY = 10**9
+        INFINITY = 10**18
         terminal = board.find_terminal_state()
         if terminal[0] != 'CONTINUE':
             if terminal[1] == flag: return (INFINITY, old_move)
@@ -112,12 +112,16 @@ class Player54():
             board.update(old_move, move, flag)
             curr = self.minimax(board, move, flag, depth + 1)
             board.backtrack_move(old_move, move)
+            # print ret, curr[0]
             if ret == curr[0]:
                 optimal_moves.append(move)
             elif (depth & 1) == 1:
                 if curr[0] < ret:
                     optimal_moves = [move]
+                    ret = curr[0]
             else:
                 if curr[0] > ret:
-                    optimal_moves = [move];
+                    optimal_moves = [move]
+                    ret = curr[0]
+        # print ">>>>>>>> move list: ", optimal_moves
         return (ret, random.choice(optimal_moves))
