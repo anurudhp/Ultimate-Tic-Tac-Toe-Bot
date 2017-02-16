@@ -2,3 +2,6 @@ vs Random:
 	wrong heuristic with (10^10, 10^5, 10^0):	105	-	25	(first)
 												4	-	106	(second)
 	
+	fixed heuristic with (10^10, 10^5, 10^0):	142 - 59 | (14 games, average: 10 - 4) [first]
+												3 - 73 | (5 games, average: 0 - 14) [second]
+												

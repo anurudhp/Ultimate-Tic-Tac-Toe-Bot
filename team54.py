@@ -30,40 +30,34 @@ def countAttacks(board, flag, row, col):
     twos = 0
     threes = 0
 
-    #rows and columns
+    # rows
     for i in xrange(u, d):
-        for j in xrange(l, r):
-            if j + 1 <= r and bs[i][j] == flag and bs[i][j + 1] == flag:
-                if j + 2 <= r and bs[i][j + 2] == flag:
-                    threes += 1
-                    twos -= 1
-                else:
-                    twos += 1
-            if i + 1 <= d and bs[i][j] == flag and bs[i + 1][j] == flag:
-                if i + 2 <= d and bs[i + 2][j] == flag:
-                    threes += 1
-                    twos -= 1
-                else:
-                    twos += 1
+        count = countElems(flag, [bs[i][l], bs[i][l + 1], bs[i][l + 2], bs[i][l + 3]])
+        if count == 2:
+            twos += 1
+        elif count == 3:
+            threes += 1
 
-    # diagonals
-    for x in xrange(0, 2):
-        i = u + x
-        j = r - 1 - x
-        if i + 1 <= d and l <= j - 1 and bs[i][j] == flag and bs[i + 1][j - 1] == flag:
-            if i + 2 <= d and l <= j - 2 and bs[i + 2][j - 2] == flag:
-                threes += 1
-                twos -= 1
-            else:
-                twos += 1
+    # cols
+    for j in xrange(l, r):
+        count = countElems(flag, [bs[u][j], bs[u + 1][j], bs[u + 2][j], bs[u + 3][j]])
+        if count == 2:
+            twos += 1
+        elif count == 3:
+            threes += 1
+    
+    # main diagonal
+    count = countElems(flag, [bs[u][r], bs[u + 1][r - 1], bs[u + 2][r - 2], bs[u + 3][r - 3]])
+    if count == 2:
+        twos += 1
+    elif count == 3:
+        threes += 1    
 
-        j = l + x
-        if i + 1 <= d and j + 1 <= r and bs[i][j] == flag and bs[i + 1][j + 1] == flag:
-            if i + 2 <= d and j + 2 <= r and bs[i + 2][j + 2] == flag:
-                threes += 1
-                twos -= 1
-            else:
-                twos += 1
+    count = countElems(flag, [bs[u][l], bs[u + 1][l + 1], bs[u + 2][l + 2], bs[u + 3][l + 3]])
+    if count == 2:
+        twos += 1
+    elif count == 3:
+        threes += 1
 
     return (twos, threes)
 
@@ -72,6 +66,16 @@ def backtrack_move(board, old_move, new_move):
     board.board_status[x][y] = '-'
     board.block_status[x / 4][y / 4] = '-'
     return
+
+def countElems(flag, elemList):
+    ans = 0
+    for elem in elemList:
+        if elem == flag:
+            ans += 1
+        elif elem != '-':
+            ans = 0
+            break
+    return ans
 
 class Player54():
     def __init__(self):
