@@ -1,3 +1,5 @@
+import random
+
 def evaluate(board, flag):
     SCORE_BLOCK_WIN = 1000
     SCORE_THREE = 200
@@ -12,9 +14,9 @@ def evaluate(board, flag):
                 score += SCORE_BLOCK_WIN
             elif board.block_status[i][j] == '-':
                 myAttacks = board.countAttacks(flag, i, j)
-                score += SCORE_TWO*myAttacks[0] + SCORE_THREE*myAttacks[1]
+                score += SCORE_TWO*(myAttacks[0]**2) + SCORE_THREE*(myAttacks[1]**2)
                 oppAttacks = board.countAttacks(oppflag, i, j)
-                score -= SCORE_TWO*oppAttacks[0] + SCORE_THREE*oppAttacks[1]
+                score -= SCORE_TWO*(oppAttacks[0]**2) + SCORE_THREE*(oppAttacks[1]**2)
             else:
                 score -= SCORE_BLOCK_WIN
     return score
@@ -73,7 +75,8 @@ def backtrack_move(board, old_move, new_move):
 
 class Player54():
     def __init__(self):
-        pass
+        random.seed()
+        
     def move(self, board, old_move, flag):
         # bind functions
         board.backtrack_move = backtrack_move.__get__(board)
@@ -104,13 +107,17 @@ class Player54():
             ret = INFINITY
         else:
             ret = -INFINITY
-        ret = (ret, (-1, -1))
+        optimal_moves = []
         for move in valid_moves:
             board.update(old_move, move, flag)
             curr = self.minimax(board, move, flag, depth + 1)
             board.backtrack_move(old_move, move)
-            if (depth & 1) == 1:
-                ret = min(ret, (curr[0], move))
+            if ret == curr[0]:
+                optimal_moves.append(move)
+            elif (depth & 1) == 1:
+                if curr[0] < ret:
+                    optimal_moves = [move]
             else:
-                ret = max(ret, (curr[0], move))
-        return ret
+                if curr[0] > ret:
+                    optimal_moves = [move];
+        return (ret, random.choice(optimal_moves))
