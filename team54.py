@@ -18,8 +18,19 @@ class Player54():
         if depth >= 5:
             return board.evaluate(flag)
         valid_moves = board.find_valid_move_cells(old_move)
+        if (depth & 1) == 1:
+            ret = 1000000000
+        else:
+            ret = 0
         for move in valid_moves:
-
+            board.update(old_move, move, flag)
+            curr = self.minimax(board, move, flag, depth + 1)
+            board.backtrack_move(old_move, move)
+            if (depth & 1) == 1:
+                ret = min(ret, curr)
+            else:
+                ret = max(ret, curr)
+        return ret
     # bound to board
     def evaluate(board, flag):
         SCORE_BLOCK_WIN = 1000
