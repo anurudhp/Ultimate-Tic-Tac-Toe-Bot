@@ -193,6 +193,7 @@ def gameplay(obj1, obj2):				#game simulator
 			pts2 = 16
 			break
 		except Exception as e:
+			print e # DEBUG
 			WINNER = 'P2'
 			MESSAGE = 'INVALID MOVE'
 			pts2 = 16
