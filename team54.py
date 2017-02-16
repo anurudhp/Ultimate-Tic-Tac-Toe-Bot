@@ -22,42 +22,46 @@ def evaluate(board, flag):
     return score
 
 def countAttacks(board, flag, row, col):
-    bs = board.board_status
     l = 4*col
     r = l + 3
     u = 4*row
     d = u + 3
     twos = 0
     threes = 0
+    is_win_cell = [4*[False] for i in xrange(0, 4)]
 
     # rows
     for i in xrange(u, d):
-        count = countElems(flag, [bs[i][l], bs[i][l + 1], bs[i][l + 2], bs[i][l + 3]])
-        if count == 2:
+        reqList = getWinReq(board.board_status, flag, [(i, l), (i, l + 1), (i, l + 2), (i, l + 3)])
+        if len(reqList) == 2:
             twos += 1
-        elif count == 3:
-            threes += 1
+        elif len(reqList) == 1:
+            is_win_cell[reqList[0][0] - u][reqList[0][1] - l] = True
 
     # cols
     for j in xrange(l, r):
-        count = countElems(flag, [bs[u][j], bs[u + 1][j], bs[u + 2][j], bs[u + 3][j]])
-        if count == 2:
+        reqList = getWinReq(board.board_status, flag, [(u, j), (u + 1, j), (u + 2, j), (u + 3, j)])
+        if len(reqList) == 2:
             twos += 1
-        elif count == 3:
-            threes += 1
-    
-    # main diagonal
-    count = countElems(flag, [bs[u][r], bs[u + 1][r - 1], bs[u + 2][r - 2], bs[u + 3][r - 3]])
-    if count == 2:
-        twos += 1
-    elif count == 3:
-        threes += 1    
+        elif len(reqList) == 1:
+            is_win_cell[reqList[0][0] - u][reqList[0][1] - l] = True
 
-    count = countElems(flag, [bs[u][l], bs[u + 1][l + 1], bs[u + 2][l + 2], bs[u + 3][l + 3]])
-    if count == 2:
+    # main diagonal
+    reqList = getWinReq(board.board_status, flag, [(u, r), (u + 1, r - 1), (u + 2, r - 2), (u + 3, r - 3)])
+    if len(reqList) == 2:
         twos += 1
-    elif count == 3:
-        threes += 1
+    elif len(reqList) == 1:
+        is_win_cell[reqList[0][0] - u][reqList[0][1] - l] = True
+
+    # reverse diagonal
+    reqList = getWinReq(board.board_status, flag, [(u, l), (u + 1, l + 1), (u + 2, l + 2), (u + 3, l + 3)])
+    if len(reqList) == 2:
+        twos += 1
+    elif len(reqList) == 1:
+        is_win_cell[reqList[0][0] - u][reqList[0][1] - l] = True
+
+    for row in is_win_cell:
+        threes += row.count(True)
 
     return (twos, threes)
 
@@ -67,13 +71,14 @@ def backtrack_move(board, old_move, new_move):
     board.block_status[x / 4][y / 4] = '-'
     return
 
-def countElems(flag, elemList):
-    ans = 0
-    for elem in elemList:
-        if elem == flag:
-            ans += 1
-        elif elem != '-':
-            ans = 0
+def getWinReq(board, flag, posList):
+    ans = []
+    for pos in posList:
+        elem = board[pos[0]][pos[1]]
+        if elem == '-':
+            ans.append(pos)
+        elif elem != flag:
+            ans = []
             break
     return ans
 

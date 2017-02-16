@@ -8,15 +8,13 @@ function div() {
 	echo $((num/den)).$((((100*num)/den)%100))
 }
 
-if [ $# -lt 1 ]; then
-	echo "usage: ./test.sh <first|second>"
-	exit
-fi
-
 if [ "$1" == "first" ]; then
 	option=4
-else
+elif [ "$1" == "second" ]; then
 	option=5
+else
+	echo "usage: ./test.sh <first|second>"
+	exit
 fi
 
 my_total=0
