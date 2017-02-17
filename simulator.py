@@ -297,7 +297,7 @@ import team54
 
 if __name__ == '__main__':
 
-	if len(sys.argv) != 2:
+	if len(sys.argv) < 2:
 		print 'Usage: python simulator.py <option>'
 		print '<option> can be 1 => Random player vs. Random player'
 		print '                2 => Human vs. Random Player'
@@ -316,15 +316,21 @@ if __name__ == '__main__':
 	elif option == '3':
 		obj1 = Manual_Player()
 		obj2 = Manual_Player()
-	elif option == '4':
+	elif option == 'TR':
 		obj1 = team54.Player54()
 		obj2 = Random_Player()
-	elif option == '5':
+	elif option == 'RT':
 		obj1 = Random_Player()
 		obj2 = team54.Player54()
-	elif option == '6':
+	elif option == 'TM':
 		obj1 = team54.Player54()
 		obj2 = Manual_Player()
+	elif option == 'TT':
+		if len(sys.argv) < 4:
+			print "argument error"
+			sys.exit(1)
+		obj1 = team54.Player54(int(sys.argv[2]))
+		obj2 = team54.Player54(int(sys.argv[3]))
 	else:
 		print 'Invalid option'
 		sys.exit(1)
