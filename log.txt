@@ -14,4 +14,9 @@ vs Random:
 	fixed heuristic with (10^10, 10^5, 10^0):
 		160 - 46 | (15 games, average: 10.66 - 3.6) [first]
 		9 - 220 | (15 games, average: 0.60 - 14.66) [second] (REALLY good - why?)
+	
+	win_pair/win_cell with (10^10, 10^5, 10^0):
+		119 - 30 | (10 games, average: 11.90 - 3.0) [first]
+		9 - 145 | (10 games, average: 0.90 - 14.50) [second]
 		
+	

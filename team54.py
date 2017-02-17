@@ -2,8 +2,8 @@ import random
 
 def evaluate(board, flag):
     SCORE_BLOCK_WIN = 10**10
-    SCORE_THREE     = 10**5
-    SCORE_TWO       = 10**0
+    SCORE_WIN_CELL     = 10**5
+    SCORE_WIN_PAIR       = 10**0
 
     score = 0
     oppflag = 'x' if flag == 'o' else 'x'
@@ -13,57 +13,45 @@ def evaluate(board, flag):
             if board.block_status[i][j] == flag:
                 score += SCORE_BLOCK_WIN
             elif board.block_status[i][j] == '-':
-                myAttacks = board.countAttacks(flag, i, j)
-                score += SCORE_TWO*(myAttacks[0]**2) + SCORE_THREE*(myAttacks[1]**2)
-                oppAttacks = board.countAttacks(oppflag, i, j)
-                score -= SCORE_TWO*(oppAttacks[0]**2) + SCORE_THREE*(oppAttacks[1]**2)
+                myAttacks = board.count_attacks(flag, i, j)
+                score += SCORE_WIN_PAIR*(myAttacks[0]**2) + SCORE_WIN_CELL*(myAttacks[1]**2)
+                oppAttacks = board.count_attacks(oppflag, i, j)
+                score -= SCORE_WIN_PAIR*(oppAttacks[0]**2) + SCORE_WIN_CELL*(oppAttacks[1]**2)
             else:
                 score -= SCORE_BLOCK_WIN
     return score
 
-def countAttacks(board, flag, row, col):
+def count_attacks(board, flag, row, col):
     l = 4*col
     r = l + 3
     u = 4*row
     d = u + 3
-    twos = 0
-    threes = 0
-    is_win_cell = [4*[False] for i in xrange(0, 4)]
+    win_pairs = 0
+    win_cells = 0
+    count = [[4*[0] for i in xrange(0, 4)] for i in xrange(0, 3)]
 
     # rows
     for i in xrange(u, d):
-        reqList = getWinReq(board.board_status, flag, [(i, l), (i, l + 1), (i, l + 2), (i, l + 3)])
-        if len(reqList) == 2:
-            twos += 1
-        elif len(reqList) == 1:
-            is_win_cell[reqList[0][0] - u][reqList[0][1] - l] = True
+        update_count(count, board.board_status, flag, [(i, l), (i, l + 1), (i, l + 2), (i, l + 3)])
 
     # cols
     for j in xrange(l, r):
-        reqList = getWinReq(board.board_status, flag, [(u, j), (u + 1, j), (u + 2, j), (u + 3, j)])
-        if len(reqList) == 2:
-            twos += 1
-        elif len(reqList) == 1:
-            is_win_cell[reqList[0][0] - u][reqList[0][1] - l] = True
+        update_count(count, board.board_status, flag, [(u, j), (u + 1, j), (u + 2, j), (u + 3, j)])
 
     # main diagonal
-    reqList = getWinReq(board.board_status, flag, [(u, r), (u + 1, r - 1), (u + 2, r - 2), (u + 3, r - 3)])
-    if len(reqList) == 2:
-        twos += 1
-    elif len(reqList) == 1:
-        is_win_cell[reqList[0][0] - u][reqList[0][1] - l] = True
+    update_count(count, board.board_status, flag, [(u, r), (u + 1, r - 1), (u + 2, r - 2), (u + 3, r - 3)])
 
-    # reverse diagonal
-    reqList = getWinReq(board.board_status, flag, [(u, l), (u + 1, l + 1), (u + 2, l + 2), (u + 3, l + 3)])
-    if len(reqList) == 2:
-        twos += 1
-    elif len(reqList) == 1:
-        is_win_cell[reqList[0][0] - u][reqList[0][1] - l] = True
+    # back diagonal
+    update_count(count, board.board_status, flag, [(u, l), (u + 1, l + 1), (u + 2, l + 2), (u + 3, l + 3)])
 
-    for row in is_win_cell:
-        threes += row.count(True)
+    for row in count[0]:
+        win_cells += row.count(1)
 
-    return (twos, threes)
+    for row in count[1]:
+        for elem in row:
+            win_pairs += elem*elem
+
+    return (win_pairs, win_cells)
 
 def backtrack_move(board, old_move, new_move):
     x, y = new_move
@@ -71,7 +59,7 @@ def backtrack_move(board, old_move, new_move):
     board.block_status[x / 4][y / 4] = '-'
     return
 
-def getWinReq(board, flag, posList):
+def update_count(count, board, flag, posList):
     ans = []
     for pos in posList:
         elem = board[pos[0]][pos[1]]
@@ -80,7 +68,9 @@ def getWinReq(board, flag, posList):
         elif elem != flag:
             ans = []
             break
-    return ans
+    if len(ans) != 4:
+        for pos in ans:
+            count[len(ans) - 1][pos[0] % 4][pos[1] % 4] += 1
 
 class Player54():
     def __init__(self):
@@ -90,7 +80,7 @@ class Player54():
         # bind functions
         board.backtrack_move = backtrack_move.__get__(board)
         board.evaluate = evaluate.__get__(board)
-        board.countAttacks = countAttacks.__get__(board)
+        board.count_attacks = count_attacks.__get__(board)
 
         # search
         play_move = self.minimax(board, old_move, flag, 0)
