@@ -32,17 +32,17 @@ def count_attacks(board, flag, row, col):
 
     # rows
     for i in xrange(u, d):
-        update_count(count, board.board_status, flag, [(i, l), (i, l + 1), (i, l + 2), (i, l + 3)])
+        update_count(count, board.board_status, flag, ((i, l), (i, l + 1), (i, l + 2), (i, l + 3)))
 
     # cols
     for j in xrange(l, r):
-        update_count(count, board.board_status, flag, [(u, j), (u + 1, j), (u + 2, j), (u + 3, j)])
+        update_count(count, board.board_status, flag, ((u, j), (u + 1, j), (u + 2, j), (u + 3, j)))
 
     # main diagonal
-    update_count(count, board.board_status, flag, [(u, r), (u + 1, r - 1), (u + 2, r - 2), (u + 3, r - 3)])
+    update_count(count, board.board_status, flag, ((u, r), (u + 1, r - 1), (u + 2, r - 2), (u + 3, r - 3)))
 
     # back diagonal
-    update_count(count, board.board_status, flag, [(u, l), (u + 1, l + 1), (u + 2, l + 2), (u + 3, l + 3)])
+    update_count(count, board.board_status, flag, ((u, l), (u + 1, l + 1), (u + 2, l + 2), (u + 3, l + 3)))
 
     for row in count[0]:
         win_cells += row.count(1)
