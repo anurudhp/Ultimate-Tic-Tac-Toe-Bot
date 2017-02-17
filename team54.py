@@ -1,12 +1,12 @@
 import random
 
 def evaluate(board, flag):
-    SCORE_BLOCK_WIN = 10**10
-    SCORE_WIN_CELL     = 10**5
-    SCORE_WIN_PAIR       = 10**0
+    SCORE_BLOCK_WIN = 10**16
+    SCORE_WIN_CELL  = 10**8
+    SCORE_WIN_PAIR  = 10**0
 
     score = 0
-    oppflag = 'x' if flag == 'o' else 'x'
+    oppflag = 'x' if flag == 'o' else 'o'
 
     for i in xrange(0, 4):
         for j in xrange(0, 4):
@@ -14,9 +14,9 @@ def evaluate(board, flag):
                 score += SCORE_BLOCK_WIN
             elif board.block_status[i][j] == '-':
                 myAttacks = board.count_attacks(flag, i, j)
-                score += SCORE_WIN_PAIR*(myAttacks[0]**2) + SCORE_WIN_CELL*(myAttacks[1]**2)
+                score += SCORE_WIN_PAIR*(myAttacks[0]) + SCORE_WIN_CELL*(myAttacks[1])
                 oppAttacks = board.count_attacks(oppflag, i, j)
-                score -= SCORE_WIN_PAIR*(oppAttacks[0]**2) + SCORE_WIN_CELL*(oppAttacks[1]**2)
+                score -= SCORE_WIN_PAIR*(oppAttacks[0]) + SCORE_WIN_CELL*(oppAttacks[1])
             else:
                 score -= SCORE_BLOCK_WIN
     return score
@@ -46,6 +46,7 @@ def count_attacks(board, flag, row, col):
 
     for row in count[0]:
         win_cells += row.count(1)
+    win_cells = win_cells**2
 
     for row in count[1]:
         for elem in row:
@@ -92,8 +93,8 @@ class Player54():
         INFINITY = 10**18
         terminal = board.find_terminal_state()
         if terminal[0] != 'CONTINUE':
-            if terminal[1] == flag: return (INFINITY, old_move)
-            if terminal[1] == 'NONE':
+            if terminal[0] == flag: return (INFINITY, old_move)
+            if terminal[0] == 'NONE':
                 return (board.evaluate(flag), old_move)
             return (-INFINITY, old_move)
 
@@ -111,7 +112,7 @@ class Player54():
             board.update(old_move, move, flag)
             curr = self.minimax(board, move, flag, depth + 1)
             board.backtrack_move(old_move, move)
-            # print ret, curr[0]
+
             if ret == curr[0]:
                 optimal_moves.append(move)
             elif (depth & 1) == 1:
@@ -122,5 +123,5 @@ class Player54():
                 if curr[0] > ret:
                     optimal_moves = [move]
                     ret = curr[0]
-        # print ">>>>>>>> move list: ", optimal_moves
+        
         return (ret, random.choice(optimal_moves))
