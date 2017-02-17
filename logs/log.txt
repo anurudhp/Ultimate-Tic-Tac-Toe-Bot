@@ -18,5 +18,10 @@ vs Random:
 	win_pair/win_cell with (10^10, 10^5, 10^0):
 		119 - 30 | (10 games, average: 11.90 - 3.0) [first]
 		9 - 145 | (10 games, average: 0.90 - 14.50) [second]
-		
+	
+	TT <max_depth_1> <must_prune_1> <max_depth_2> <must_prune_2>
+	593 - 294 | (58 games, average: 10.22 - 5.6) [TT 1 1 2 0]
+	4481 - 1594 | (391 games, average: 11.46 - 4.7) [TT 1 0 2 1]
+	4698 - 1304 | (382 games, average: 12.29 - 3.41) [TT 1 1 2 1]
+	341 - 446 | (51 games, average: 6.68 - 8.74) [TT 1 0 2 0]
 	

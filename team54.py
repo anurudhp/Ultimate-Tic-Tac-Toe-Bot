@@ -75,8 +75,10 @@ def update_count(count, board, flag, posList):
 
 INFINITY = 10**18
 class Player54():
-    def __init__(self, max_depth = 3):
+    def __init__(self, max_depth = 2, must_prune = True):
         self.max_depth = max_depth
+        self.must_prune = must_prune
+        print self.must_prune
         random.seed()
 
     def move(self, board, old_move, flag):
@@ -126,7 +128,7 @@ class Player54():
                     optimal_moves.append(move)
                 beta = min(beta, final_score)
 
-            if beta <= alpha: break
+            if self.must_prune and beta <= alpha: break
 
         if depth == 0: return random.choice(optimal_moves)
         return final_score

@@ -326,11 +326,11 @@ if __name__ == '__main__':
 		obj1 = team54.Player54()
 		obj2 = Manual_Player()
 	elif option == 'TT':
-		if len(sys.argv) < 4:
+		if len(sys.argv) < 6:
 			print "argument error"
 			sys.exit(1)
-		obj1 = team54.Player54(int(sys.argv[2]))
-		obj2 = team54.Player54(int(sys.argv[3]))
+		obj1 = team54.Player54(int(sys.argv[2]), bool(int(sys.argv[3])))
+		obj2 = team54.Player54(int(sys.argv[4]), bool(int(sys.argv[5])))
 	else:
 		print 'Invalid option'
 		sys.exit(1)
