@@ -3,9 +3,11 @@ import copy
 import sys
 
 def evaluate(board, flag):
-    SCORE_BLOCK_WIN = 10**16
-    SCORE_WIN_CELL  = 10**8
+    SCORE_BLOCK_WIN = 10**12
+    SCORE_WIN_CELL  = 10**7
     SCORE_WIN_PAIR  = 10**0
+    SCORE_GAME_WIN_CELL = 10**15
+    SCORE_GAME_WIN_PAIR = 10**10
 
     score = 0
     oppflag = 'x' if flag == 'o' else 'o'
@@ -15,12 +17,21 @@ def evaluate(board, flag):
             if board.block_status[i][j] == flag:
                 score += SCORE_BLOCK_WIN
             elif board.block_status[i][j] == '-':
-                myAttacks = board.count_attacks(flag, i, j)
+                myAttacks = count_attacks(board.board_status, flag, i, j)
+                oppAttacks = count_attacks(board.board_status, oppflag, i, j)
+
                 score += SCORE_WIN_PAIR*(myAttacks[0]) + SCORE_WIN_CELL*(myAttacks[1])
-                oppAttacks = board.count_attacks(oppflag, i, j)
                 score -= SCORE_WIN_PAIR*(oppAttacks[0]) + SCORE_WIN_CELL*(oppAttacks[1])
             else:
                 score -= SCORE_BLOCK_WIN
+
+    # block level
+    myAttacks = count_attacks(board.block_status, flag, 0, 0)
+    oppAttacks = count_attacks(board.block_status, oppflag, 0, 0)
+
+    score += SCORE_GAME_WIN_PAIR*(myAttacks[0]) + SCORE_GAME_WIN_CELL*(myAttacks[1])
+    score -= SCORE_GAME_WIN_PAIR*(oppAttacks[0]) + SCORE_GAME_WIN_CELL*(oppAttacks[1])
+
     return score
 
 def count_attacks(board, flag, row, col):
@@ -34,17 +45,17 @@ def count_attacks(board, flag, row, col):
 
     # rows
     for i in xrange(u, d):
-        update_count(count, board.board_status, flag, ((i, l), (i, l + 1), (i, l + 2), (i, l + 3)))
+        update_count(count, board, flag, ((i, l), (i, l + 1), (i, l + 2), (i, l + 3)))
 
     # cols
     for j in xrange(l, r):
-        update_count(count, board.board_status, flag, ((u, j), (u + 1, j), (u + 2, j), (u + 3, j)))
+        update_count(count, board, flag, ((u, j), (u + 1, j), (u + 2, j), (u + 3, j)))
 
     # main diagonal
-    update_count(count, board.board_status, flag, ((u, l + 3), (u + 1, l + 2), (u + 2, l + 1), (u + 3, l)))
+    update_count(count, board, flag, ((u, l + 3), (u + 1, l + 2), (u + 2, l + 1), (u + 3, l)))
 
     # back diagonal
-    update_count(count, board.board_status, flag, ((u, l), (u + 1, l + 1), (u + 2, l + 2), (u + 3, l + 3)))
+    update_count(count, board, flag, ((u, l), (u + 1, l + 1), (u + 2, l + 2), (u + 3, l + 3)))
 
     for row in count[0]:
         win_cells += row.count(1)
@@ -81,14 +92,14 @@ class Player54():
         self.max_depth = max_depth
         self.must_prune = must_prune
         print self.must_prune
-        random.seed()
+        random.seed(0)
 
     def move(self, board, old_move, flag):
         # create copy and bind functions
         board = copy.deepcopy(board)
         board.backtrack_move = backtrack_move.__get__(board)
         board.evaluate = evaluate.__get__(board)
-        board.count_attacks = count_attacks.__get__(board)
+        # board.count_attacks = count_attacks.__get__(board)
 
         # search
         opp_flag = 'x' if flag == 'o' else 'o'
