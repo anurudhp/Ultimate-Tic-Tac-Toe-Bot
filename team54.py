@@ -1,4 +1,5 @@
 import random
+import copy
 
 def evaluate(board, flag):
     SCORE_BLOCK_WIN = 10**16
@@ -23,9 +24,9 @@ def evaluate(board, flag):
 
 def count_attacks(board, flag, row, col):
     l = 4*col
-    r = l + 3
+    r = l + 4
     u = 4*row
-    d = u + 3
+    d = u + 4
     win_pairs = 0
     win_cells = 0
     count = [[4*[0] for i in xrange(0, 4)] for i in xrange(0, 3)]
@@ -39,7 +40,7 @@ def count_attacks(board, flag, row, col):
         update_count(count, board.board_status, flag, ((u, j), (u + 1, j), (u + 2, j), (u + 3, j)))
 
     # main diagonal
-    update_count(count, board.board_status, flag, ((u, r), (u + 1, r - 1), (u + 2, r - 2), (u + 3, r - 3)))
+    update_count(count, board.board_status, flag, ((u, l + 3), (u + 1, l + 2), (u + 2, l + 1), (u + 3, l)))
 
     # back diagonal
     update_count(count, board.board_status, flag, ((u, l), (u + 1, l + 1), (u + 2, l + 2), (u + 3, l + 3)))
@@ -82,38 +83,40 @@ class Player54():
         random.seed()
 
     def move(self, board, old_move, flag):
-        # bind functions
+        # create copy and bind functions
+        board = copy.deepcopy(board)
         board.backtrack_move = backtrack_move.__get__(board)
         board.evaluate = evaluate.__get__(board)
         board.count_attacks = count_attacks.__get__(board)
 
         # search
-        play_move = self.minimax(board, old_move, flag)
-        print play_move
-        return play_move
+        opp_flag = 'x' if flag == 'o' else 'o'
+        play_move = self.minimax(board, old_move, flag, opp_flag, flag)
+        print flag, play_move
+        return play_move[1]
 
     # search functions
-    def minimax(self, board, old_move, flag, depth = 0, alpha = -INFINITY, beta = +INFINITY, start = True):
+    def minimax(self, board, old_move, flag, opp_flag, max_flag, depth = 0, alpha = -INFINITY, beta = +INFINITY):
         terminal = board.find_terminal_state()
         if terminal[0] != 'CONTINUE':
             if terminal[0] == flag: return INFINITY
             if terminal[0] == 'NONE':
-                return board.evaluate(flag)
+                return board.evaluate(max_flag)
             return -INFINITY
 
         if depth >= self.max_depth:
-            return board.evaluate(flag)
+            return board.evaluate(max_flag)
 
         valid_moves = board.find_valid_move_cells(old_move)
-        final_score = -INFINITY if start else +INFINITY
+        final_score = -INFINITY if flag == max_flag else +INFINITY
 
         if depth == 0: optimal_moves = []
         for move in valid_moves:
             board.update(old_move, move, flag)
-            current_score = self.minimax(board, move, flag, depth + 1, alpha, beta, not start)
+            current_score = self.minimax(board, move, opp_flag, flag, max_flag, depth + 1, alpha, beta)
             board.backtrack_move(old_move, move, flag)
 
-            if start:
+            if flag == max_flag:
                 if final_score < current_score:
                     final_score = current_score
                     if depth == 0: optimal_moves = [move]
@@ -130,5 +133,5 @@ class Player54():
 
             if self.must_prune and beta <= alpha: break
 
-        if depth == 0: return random.choice(optimal_moves)
+        if depth == 0: return final_score, random.choice(optimal_moves)
         return final_score
