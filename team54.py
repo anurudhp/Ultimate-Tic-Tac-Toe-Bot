@@ -100,7 +100,7 @@ class Player54():
         # diff_len = len(play_move[1]) - len(play_move2[1])
         # if diff_len != 0: sys.stderr.write(str(diff_len) + '\n')
         # assert (play_move[0] == play_move2[0])
-        return random.choice(play_move[1])
+        return play_move[1]
 
     # search functions
     def minimax(self, board, old_move, flag, opp_flag, max_flag, depth = 0, alpha = -INFINITY, beta = +INFINITY):
@@ -116,9 +116,10 @@ class Player54():
             return heuristic_estimate
 
         valid_moves = board.find_valid_move_cells(old_move)
+        random.shuffle(valid_moves)
         final_score = -INFINITY if flag == max_flag else +INFINITY
 
-        if depth == 0: optimal_moves = []
+        optimal_move = None
         for move in valid_moves:
             board.update(old_move, move, flag)
             current_score = self.minimax(board, move, opp_flag, flag, max_flag, depth + 1, alpha, beta)
@@ -127,19 +128,15 @@ class Player54():
             if flag == max_flag:
                 if final_score < current_score:
                     final_score = current_score
-                    if depth == 0: optimal_moves = [move]
-                elif depth == 0 and final_score == current_score:
-                    optimal_moves.append(move)
+                    optimal_move = move
                 alpha = max(alpha, final_score)
             else:
                 if final_score > current_score:
                     final_score = current_score
-                    if depth == 0: optimal_moves = [move]
-                elif depth == 0 and final_score == current_score:
-                    optimal_moves.append(move)
+                    optimal_move = move
                 beta = min(beta, final_score)
 
-            if self.must_prune and beta < alpha: break
+            if self.must_prune and beta <= alpha: break
 
-        if depth == 0: return final_score, optimal_moves
+        if depth == 0: return final_score, optimal_move
         return final_score
