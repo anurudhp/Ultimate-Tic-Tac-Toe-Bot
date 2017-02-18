@@ -50,7 +50,7 @@ def count_to_score(score_win_cell, score_win_pair, score_win_triple, count):
             else:
                 win_pairs += count[i][j][1]**2
                 win_triples += count[i][j][2]**2
-    # win_cells = win_cells**2
+    win_cells = win_cells**2
 
     return score_win_cell*win_cells + score_win_pair*win_pairs + score_win_triple*win_triples
 

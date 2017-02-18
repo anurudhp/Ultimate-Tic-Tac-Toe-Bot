@@ -296,6 +296,7 @@ def gameplay(obj1, obj2):				#game simulator
 
 
 import team54
+import opp
 
 if __name__ == '__main__':
 
@@ -333,6 +334,18 @@ if __name__ == '__main__':
 			sys.exit(1)
 		obj1 = team54.Player54(int(sys.argv[2]), bool(int(sys.argv[3])))
 		obj2 = team54.Player54(int(sys.argv[4]), bool(int(sys.argv[5])))
+	elif option == 'TO':
+		obj1 = team54.Player54()
+		obj2 = opp.Player54()
+	elif option == 'OT':
+		obj1 = opp.Player54()
+		obj2 = team54.Player54()
+	elif option == 'OR':
+		obj1 = opp.Player54()
+		obj2 = Random_Player()
+	elif option == 'RO':
+		obj1 = Random_Player()
+		obj2 = opp.Player54()
 	else:
 		print 'Invalid option'
 		sys.exit(1)

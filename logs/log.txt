@@ -31,4 +31,10 @@ vs Random:
 		475 - 233 | (49 games, average: 9.69 - 4.75) [TT 1 0 2 1]
 		437 - 231 | (47 games, average: 9.29 - 4.91) [TT 1 1 2 1]
 		
+	T: win_cells, O: win_cells**2
+		154 - 121 | (22 games, average: 7.0 - 5.50) [TO]
+		132 - 136 | (22 games, average: 6.0 - 6.18) [OT]
+		374 - 51 | (34 games, average: 11.0 - 1.50) [TR]
+		175 - 22 | (16 games, average: 10.93 - 1.37) [OR]
+		thus T > O
 	
