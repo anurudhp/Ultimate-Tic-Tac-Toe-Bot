@@ -120,6 +120,7 @@ class Player54():
         # diff_len = len(play_move[1]) - len(play_move2[1])
         # if diff_len != 0: sys.stderr.write(str(diff_len) + '\n')
         # assert (play_move[0] == play_move2[0])
+        print play_move
         return play_move[1]
 
     # search functions
@@ -146,12 +147,12 @@ class Player54():
             board.backtrack_move(old_move, move, flag)
 
             if flag == max_flag:
-                if final_score < current_score:
+                if final_score <= current_score:
                     final_score = current_score
                     optimal_move = move
                 alpha = max(alpha, final_score)
             else:
-                if final_score > current_score:
+                if final_score >= current_score:
                     final_score = current_score
                     optimal_move = move
                 beta = min(beta, final_score)
