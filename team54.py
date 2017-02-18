@@ -2,46 +2,62 @@ import random
 import copy
 import sys
 
-def evaluate(board, flag):
-    SCORE_BLOCK_WIN = 10**12
-    SCORE_WIN_CELL  = 10**7
-    SCORE_WIN_PAIR  = 10**0
-    SCORE_GAME_WIN_CELL = 10**15
-    SCORE_GAME_WIN_PAIR = 10**10
+SCORE_BLOCK_WIN = 10**10
+SCORE_WIN_CELL  = 10**5
+SCORE_WIN_PAIR  = 10**0
+SCORE_WIN_TRIPLE = 0
+# SCORE_GAME_WIN_CELL = 10**15
+# SCORE_GAME_WIN_PAIR = 10**10
 
+def evaluate(board, flag):
+
+    block_score = [4*[0] for i in xrange(4)]
+    opp_flag = 'x' if flag == 'o' else 'o'
     score = 0
-    oppflag = 'x' if flag == 'o' else 'o'
 
     for i in xrange(0, 4):
         for j in xrange(0, 4):
             if board.block_status[i][j] == flag:
-                score += SCORE_BLOCK_WIN
+                block_score[i][j] = SCORE_BLOCK_WIN
+            elif board.block_status[i][j] == opp_flag:
+                block_score[i][j] -= SCORE_BLOCK_WIN
             elif board.block_status[i][j] == '-':
-                myAttacks = count_attacks(board.board_status, flag, i, j)
-                oppAttacks = count_attacks(board.board_status, oppflag, i, j)
-
-                score += SCORE_WIN_PAIR*(myAttacks[0]) + SCORE_WIN_CELL*(myAttacks[1])
-                score -= SCORE_WIN_PAIR*(oppAttacks[0]) + SCORE_WIN_CELL*(oppAttacks[1])
-            else:
-                score -= SCORE_BLOCK_WIN
+                my_score  = count_to_score(count_attacks(board.board_status, flag, i, j))
+                opp_score = count_to_score(count_attacks(board.board_status, opp_flag, i, j))
+                block_score[i][j] = my_score - opp_score
+            score += block_score[i][j]
 
     # block level
-    myAttacks = count_attacks(board.block_status, flag, 0, 0)
-    oppAttacks = count_attacks(board.block_status, oppflag, 0, 0)
+    # my_game_count = count_attacks(board.block_status, flag, 0, 0)
+    # opp_game_count = count_attacks(board.block_status, opp_flag, 0, 0)
 
-    score += SCORE_GAME_WIN_PAIR*(myAttacks[0]) + SCORE_GAME_WIN_CELL*(myAttacks[1])
-    score -= SCORE_GAME_WIN_PAIR*(oppAttacks[0]) + SCORE_GAME_WIN_CELL*(oppAttacks[1])
+    # score += SCORE_GAME_WIN_PAIR*(my_game_count[0]) + SCORE_GAME_WIN_CELL*(my_game_count[1])
+    # score -= SCORE_GAME_WIN_PAIR*(opp_game_count[0]) + SCORE_GAME_WIN_CELL*(opp_game_count[1])
 
     return score
+
+def count_to_score(count):
+    win_triples = 0
+    win_pairs   = 0
+    win_cells   = 0
+
+    for i in xrange(4):
+        for j in xrange(4):
+            if count[i][j][0] != 0:
+                win_cells += 1
+            else:
+                win_pairs += count[i][j][1]**2
+                win_triples += count[i][j][2]**2
+    win_cells = win_cells**2
+
+    return SCORE_WIN_CELL*win_cells + SCORE_WIN_PAIR*win_pairs + SCORE_WIN_TRIPLE*win_triples
 
 def count_attacks(board, flag, row, col):
     l = 4*col
     r = l + 4
     u = 4*row
     d = u + 4
-    win_pairs = 0
-    win_cells = 0
-    count = [[4*[0] for i in xrange(0, 4)] for i in xrange(0, 3)]
+    count = [[3*[0] for i in xrange(4)] for i in xrange(4)]
 
     # rows
     for i in xrange(u, d):
@@ -57,21 +73,8 @@ def count_attacks(board, flag, row, col):
     # back diagonal
     update_count(count, board, flag, ((u, l), (u + 1, l + 1), (u + 2, l + 2), (u + 3, l + 3)))
 
-    for row in count[0]:
-        win_cells += row.count(1)
-    win_cells = win_cells**2
+    return count
 
-    for row in count[1]:
-        for elem in row:
-            win_pairs += elem*elem
-
-    return (win_pairs, win_cells)
-
-def backtrack_move(board, old_move, new_move, flag):
-    x, y = new_move
-    board.board_status[x][y] = '-'
-    board.block_status[x / 4][y / 4] = '-'
-    return
 
 def update_count(count, board, flag, posList):
     ans = []
@@ -84,7 +87,13 @@ def update_count(count, board, flag, posList):
             break
     if len(ans) != 4:
         for pos in ans:
-            count[len(ans) - 1][pos[0] % 4][pos[1] % 4] += 1
+            count[pos[0] % 4][pos[1] % 4][len(ans) - 1] += 1
+
+def backtrack_move(board, old_move, new_move, flag):
+    x, y = new_move
+    board.board_status[x][y] = '-'
+    board.block_status[x / 4][y / 4] = '-'
+    return
 
 INFINITY = 10**18
 class Player54():
@@ -92,7 +101,7 @@ class Player54():
         self.max_depth = max_depth
         self.must_prune = must_prune
         print self.must_prune
-        random.seed(0)
+        random.seed()
 
     def move(self, board, old_move, flag):
         # create copy and bind functions
