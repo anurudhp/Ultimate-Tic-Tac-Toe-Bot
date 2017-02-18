@@ -31,10 +31,10 @@ def evaluate(board, flag):
 
     # game score
     game_score = 0
-    my_game_count  = count_attacks(board.block_status, flag, 0, 0)
-    opp_game_count = count_attacks(board.block_status, opp_flag, 0, 0)
-    game_score += count_to_score(SCORE_GAME_CELL, SCORE_GAME_PAIR, SCORE_GAME_TRIPLE, my_game_count)
-    game_score -= count_to_score(SCORE_GAME_CELL, SCORE_GAME_PAIR, SCORE_GAME_TRIPLE, my_game_count)
+    # my_game_count  = count_attacks(board.block_status, flag, 0, 0)
+    # opp_game_count = count_attacks(board.block_status, opp_flag, 0, 0)
+    # game_score += count_to_score(SCORE_GAME_CELL, SCORE_GAME_PAIR, SCORE_GAME_TRIPLE, my_game_count)
+    # game_score -= count_to_score(SCORE_GAME_CELL, SCORE_GAME_PAIR, SCORE_GAME_TRIPLE, my_game_count)
 
     return WEIGHT_ATTACK*attack_score + WEIGHT_GAME*game_score
 
@@ -50,7 +50,7 @@ def count_to_score(score_win_cell, score_win_pair, score_win_triple, count):
             else:
                 win_pairs += count[i][j][1]**2
                 win_triples += count[i][j][2]**2
-    win_cells = win_cells**2
+    # win_cells = win_cells**2
 
     return score_win_cell*win_cells + score_win_pair*win_pairs + score_win_triple*win_triples
 

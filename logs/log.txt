@@ -37,4 +37,5 @@ vs Random:
 		374 - 51 | (34 games, average: 11.0 - 1.50) [TR]
 		175 - 22 | (16 games, average: 10.93 - 1.37) [OR]
 		thus T > O
-	
+
+	but win_pairs**2 >> win_pairs
