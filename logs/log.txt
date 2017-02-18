@@ -20,8 +20,15 @@ vs Random:
 		9 - 145 | (10 games, average: 0.90 - 14.50) [second]
 	
 	TT <max_depth_1> <must_prune_1> <max_depth_2> <must_prune_2>
-	593 - 294 | (58 games, average: 10.22 - 5.6) [TT 1 1 2 0]
-	4481 - 1594 | (391 games, average: 11.46 - 4.7) [TT 1 0 2 1]
-	4698 - 1304 | (382 games, average: 12.29 - 3.41) [TT 1 1 2 1]
-	341 - 446 | (51 games, average: 6.68 - 8.74) [TT 1 0 2 0]
+		593 - 294 | (58 games, average: 10.22 - 5.6) [TT 1 1 2 0]
+		4481 - 1594 | (391 games, average: 11.46 - 4.7) [TT 1 0 2 1]
+		4698 - 1304 | (382 games, average: 12.29 - 3.41) [TT 1 1 2 1]
+		341 - 446 | (51 games, average: 6.68 - 8.74) [TT 1 0 2 0]
+	
+	after bug fix:
+		45 - 39 | (6 games, average: 7.50 - 6.50) [TT 1 0 2 0]
+		34 - 50 | (6 games, average: 5.66 - 8.33) [TT 1 1 2 0]
+		475 - 233 | (49 games, average: 9.69 - 4.75) [TT 1 0 2 1]
+		437 - 231 | (47 games, average: 9.29 - 4.91) [TT 1 1 2 1]
+		
 	
