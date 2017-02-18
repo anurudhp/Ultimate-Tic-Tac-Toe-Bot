@@ -3,11 +3,11 @@ import copy
 import sys
 
 def evaluate(board, flag):
-    SCORE_BLOCK_WIN = 10**12
-    SCORE_WIN_CELL  = 10**7
+    SCORE_BLOCK_WIN = 10**15
+    SCORE_WIN_CELL  = 10**10
     SCORE_WIN_PAIR  = 10**0
-    SCORE_GAME_WIN_CELL = 10**15
-    SCORE_GAME_WIN_PAIR = 10**10
+    SCORE_GAME_WIN_CELL = 10**12
+    SCORE_GAME_WIN_PAIR = 10**7
 
     score = 0
     oppflag = 'x' if flag == 'o' else 'o'
@@ -88,11 +88,11 @@ def update_count(count, board, flag, posList):
 
 INFINITY = 10**18
 class Player54():
-    def __init__(self, max_depth = 2, must_prune = True):
+    def __init__(self, max_depth = 3, must_prune = True):
         self.max_depth = max_depth
         self.must_prune = must_prune
         print self.must_prune
-        random.seed(0)
+        random.seed()
 
     def move(self, board, old_move, flag):
         # create copy and bind functions
@@ -111,6 +111,7 @@ class Player54():
         # diff_len = len(play_move[1]) - len(play_move2[1])
         # if diff_len != 0: sys.stderr.write(str(diff_len) + '\n')
         # assert (play_move[0] == play_move2[0])
+        print play_move
         return play_move[1]
 
     # search functions
@@ -137,12 +138,12 @@ class Player54():
             board.backtrack_move(old_move, move, flag)
 
             if flag == max_flag:
-                if final_score < current_score:
+                if final_score <= current_score:
                     final_score = current_score
                     optimal_move = move
                 alpha = max(alpha, final_score)
             else:
-                if final_score > current_score:
+                if final_score >= current_score:
                     final_score = current_score
                     optimal_move = move
                 beta = min(beta, final_score)
