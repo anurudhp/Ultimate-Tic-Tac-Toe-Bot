@@ -1,5 +1,6 @@
 import random
 import copy
+import sys
 
 def evaluate(board, flag):
     SCORE_BLOCK_WIN = 10**16
@@ -92,20 +93,27 @@ class Player54():
         # search
         opp_flag = 'x' if flag == 'o' else 'o'
         play_move = self.minimax(board, old_move, flag, opp_flag, flag)
-        print flag, play_move
-        return play_move[1]
+        # self.must_prune = not self.must_prune
+        # play_move2 = self.minimax(board, old_move, flag, opp_flag, flag)
+        # self.must_prune = not self.must_prune
+
+        # diff_len = len(play_move[1]) - len(play_move2[1])
+        # if diff_len != 0: sys.stderr.write(str(diff_len) + '\n')
+        # assert (play_move[0] == play_move2[0])
+        return random.choice(play_move[1])
 
     # search functions
     def minimax(self, board, old_move, flag, opp_flag, max_flag, depth = 0, alpha = -INFINITY, beta = +INFINITY):
         terminal = board.find_terminal_state()
+        heuristic_estimate = board.evaluate(max_flag)
         if terminal[0] != 'CONTINUE':
             if terminal[0] == flag: return INFINITY
             if terminal[0] == 'NONE':
-                return board.evaluate(max_flag)
+                return heuristic_estimate
             return -INFINITY
 
         if depth >= self.max_depth:
-            return board.evaluate(max_flag)
+            return heuristic_estimate
 
         valid_moves = board.find_valid_move_cells(old_move)
         final_score = -INFINITY if flag == max_flag else +INFINITY
@@ -131,7 +139,7 @@ class Player54():
                     optimal_moves.append(move)
                 beta = min(beta, final_score)
 
-            if self.must_prune and beta <= alpha: break
+            if self.must_prune and beta < alpha: break
 
-        if depth == 0: return final_score, random.choice(optimal_moves)
+        if depth == 0: return final_score, optimal_moves
         return final_score
