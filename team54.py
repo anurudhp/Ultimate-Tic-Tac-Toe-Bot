@@ -42,7 +42,7 @@ WEIGHT_ATTACK = 10**7
 WEIGHT_GAME = 1
 
 class Player54():
-    def __init__(self, max_depth = 4, max_breadth = 16 ** 10, must_prune = True):
+    def __init__(self, max_depth = 3, max_breadth = 16 ** 10, must_prune = True):
         self.max_depth = max_depth
         self.max_breadth = max_breadth
         self.must_prune = must_prune
@@ -95,7 +95,7 @@ class Player54():
                 return self.heuristic_estimate
             return -INFINITY
 
-        if depth >= self.max_depth: # or breadth > self.max_breadth:
+        if depth > self.max_depth: # or breadth > self.max_breadth:
             return self.heuristic_estimate
 
         valid_moves = self.board.find_valid_move_cells(prev_move)
@@ -131,16 +131,16 @@ class Player54():
         if apply_move:
             self.board.update(old_move, current_move, flag)
         self.backtracking = False
-        self.update_heuristic(current_move)
+        if current_move[0] != -1:
+            self.update_heuristic(current_move)
 
     # undo a move, and update the heuristic estimate
-    def backtrack(self, old_move, current_move, flag, apply_move = True):
-        if apply_move:
-            x, y = current_move
-            self.board.board_status[x][y] = '-'
-            self.board.block_status[x >> 2][y >> 2] = '-'
+    def backtrack(self, old_move, current_move, flag):
         self.backtracking = True
         self.update_heuristic(current_move)
+        x, y = current_move
+        self.board.board_status[x][y] = '-'
+        self.board.block_status[x >> 2][y >> 2] = '-'
 
     def update_heuristic(self, current_move):
         x, y = current_move
