@@ -113,13 +113,7 @@ class Player54():
         # search
         opp_flag = 'x' if flag == 'o' else 'o'
         play_move = self.minimax(board, old_move, flag, opp_flag, flag)
-        # self.must_prune = not self.must_prune
-        # play_move2 = self.minimax(board, old_move, flag, opp_flag, flag)
-        # self.must_prune = not self.must_prune
 
-        # diff_len = len(play_move[1]) - len(play_move2[1])
-        # if diff_len != 0: sys.stderr.write(str(diff_len) + '\n')
-        # assert (play_move[0] == play_move2[0])
         print play_move
         return play_move[1]
 
