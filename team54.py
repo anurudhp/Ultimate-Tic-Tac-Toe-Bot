@@ -106,7 +106,7 @@ class Player54():
     def move(self, board, old_move, flag):
         # create copy and bind functions
         board = copy.deepcopy(board)
-        board.backtrack_move = backtrack_move.__get__(board)
+        board.backtrack = backtrack_move.__get__(board)
         board.evaluate = evaluate.__get__(board)
         # board.count_attacks = count_attacks.__get__(board)
 
@@ -120,25 +120,24 @@ class Player54():
     # search functions
     def minimax(self, board, old_move, flag, opp_flag, max_flag, depth = 0, alpha = -INFINITY, beta = +INFINITY):
         terminal = board.find_terminal_state()
-        heuristic_estimate = board.evaluate(max_flag)
         if terminal[0] != 'CONTINUE':
             if terminal[0] == flag: return INFINITY
             if terminal[0] == 'NONE':
-                return heuristic_estimate
+                return board.evaluate(max_flag)
             return -INFINITY
 
         if depth >= self.max_depth:
-            return heuristic_estimate
+            return board.evaluate(max_flag)
 
         valid_moves = board.find_valid_move_cells(old_move)
-        random.shuffle(valid_moves)
+        if depth == 0: random.shuffle(valid_moves)
         final_score = -INFINITY if flag == max_flag else +INFINITY
 
         optimal_move = None
         for move in valid_moves:
             board.update(old_move, move, flag)
             current_score = self.minimax(board, move, opp_flag, flag, max_flag, depth + 1, alpha, beta)
-            board.backtrack_move(old_move, move, flag)
+            board.backtrack(old_move, move, flag)
 
             if flag == max_flag:
                 if final_score <= current_score:
