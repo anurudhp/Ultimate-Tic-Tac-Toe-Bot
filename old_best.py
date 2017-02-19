@@ -23,9 +23,9 @@ def evaluate(board, flag):
 
 def count_attacks(board, flag, row, col):
     l = 4*col
-    r = l + 3
+    r = l + 4
     u = 4*row
-    d = u + 3
+    d = u + 4
     win_pairs = 0
     win_cells = 0
     count = [[4*[0] for i in xrange(0, 4)] for i in xrange(0, 3)]
@@ -39,7 +39,7 @@ def count_attacks(board, flag, row, col):
         update_count(count, board.board_status, flag, [(u, j), (u + 1, j), (u + 2, j), (u + 3, j)])
 
     # main diagonal
-    update_count(count, board.board_status, flag, [(u, r), (u + 1, r - 1), (u + 2, r - 2), (u + 3, r - 3)])
+    update_count(count, board.board_status, flag, [(u, l + 3), (u + 1, l + 2), (u + 2, l + 1), (u + 3, l)])
 
     # back diagonal
     update_count(count, board.board_status, flag, [(u, l), (u + 1, l + 1), (u + 2, l + 2), (u + 3, l + 3)])

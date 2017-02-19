@@ -32,7 +32,7 @@ import copy
 
 INFINITY = 10**18
 SCORE_BLOCK  = 10**9
-SCORE_CELL   = 10**5
+SCORE_CELL   = 10**6
 SCORE_PAIR   = 10**3
 SCORE_TRIPLE = 10**0
 SCORE_GAME_CELL   = 10**6
@@ -42,7 +42,7 @@ WEIGHT_ATTACK = 10**7
 WEIGHT_GAME = 1
 
 class Player54():
-    def __init__(self, max_depth = 3, max_breadth = 16 ** 10, must_prune = True):
+    def __init__(self, max_depth = 4, max_breadth = 16 ** 10, must_prune = True):
         self.max_depth = max_depth
         self.max_breadth = max_breadth
         self.must_prune = must_prune
@@ -95,7 +95,7 @@ class Player54():
                 return self.heuristic_estimate
             return -INFINITY
 
-        if depth > self.max_depth: # or breadth > self.max_breadth:
+        if depth >= self.max_depth: # or breadth > self.max_breadth:
             return self.heuristic_estimate
 
         valid_moves = self.board.find_valid_move_cells(prev_move)
