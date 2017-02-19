@@ -27,7 +27,7 @@ def evaluate(board, flag):
             if board.block_status[i][j] == flag:
                 my_block_score[i][j] = SCORE_BLOCK
             elif board.block_status[i][j] == opp_flag:
-                opp_block_score[i][j] -= SCORE_BLOCK
+                opp_block_score[i][j] = SCORE_BLOCK
             elif board.block_status[i][j] == '-':
                 my_block_score[i][j]  = get_attack_score(SCORE_CELL, SCORE_PAIR, SCORE_TRIPLE, count_attacks(board.board_status, flag, i, j))
                 opp_block_score[i][j] = get_attack_score(SCORE_CELL, SCORE_PAIR, SCORE_TRIPLE, count_attacks(board.board_status, opp_flag, i, j))
@@ -97,7 +97,7 @@ def backtrack_move(board, old_move, new_move, flag):
 
 INFINITY = 10**18
 class Player54():
-    def __init__(self, max_depth = 2, must_prune = True):
+    def __init__(self, max_depth = 3, must_prune = True):
         self.max_depth = max_depth
         self.must_prune = must_prune
         print self.must_prune
