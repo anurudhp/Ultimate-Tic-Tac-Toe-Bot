@@ -4,13 +4,13 @@ import sys
 
 def evaluate(board, flag):
     SCORE_BLOCK  = 10**9
-    SCORE_CELL   = 10**6
+    SCORE_CELL   = 10**5
     SCORE_PAIR   = 10**3
     SCORE_TRIPLE = 10**0
     SCORE_GAME_CELL   = 10**6
     SCORE_GAME_PAIR   = 10**3
     SCORE_GAME_TRIPLE = 10**0
-    WEIGHT_ATTACK = 10**6
+    WEIGHT_ATTACK = 10**7
     WEIGHT_GAME = 1
 
     opp_flag = 'x' if flag == 'o' else 'o'
@@ -27,17 +27,20 @@ def evaluate(board, flag):
             if board.block_status[i][j] == flag:
                 my_block_score[i][j] = SCORE_BLOCK
             elif board.block_status[i][j] == opp_flag:
-                opp_block_score[i][j] -= SCORE_BLOCK
+                opp_block_score[i][j] = -SCORE_BLOCK
             elif board.block_status[i][j] == '-':
                 my_block_score[i][j]  = get_attack_score(SCORE_CELL, SCORE_PAIR, SCORE_TRIPLE, count_attacks(board.board_status, flag, i, j))
                 opp_block_score[i][j] = get_attack_score(SCORE_CELL, SCORE_PAIR, SCORE_TRIPLE, count_attacks(board.board_status, opp_flag, i, j))
 
+            # assert(my_block_score[i][j] >= 0 and opp_block_score[i][j] >= 0)
             attack_score += my_block_score[i][j] - opp_block_score[i][j]
-            game_score += my_block_score[i][j]*get_cell_score(SCORE_GAME_CELL, SCORE_GAME_PAIR, SCORE_GAME_TRIPLE, my_game_count[i][j]) \
-                        - opp_block_score[i][j]*get_cell_score(SCORE_GAME_CELL, SCORE_GAME_PAIR, SCORE_GAME_TRIPLE, opp_game_count[i][j])
+
+            my_game_score  = my_block_score[i][j]*get_cell_score(SCORE_GAME_CELL, SCORE_GAME_PAIR, SCORE_GAME_TRIPLE, my_game_count[i][j])
+            opp_game_score = opp_block_score[i][j]*get_cell_score(SCORE_GAME_CELL, SCORE_GAME_PAIR, SCORE_GAME_TRIPLE, opp_game_count[i][j])
+            # assert(my_game_score >= 0 and opp_game_score >= 0)
+            game_score += my_game_score - abs(opp_game_score)
 
     return WEIGHT_ATTACK*attack_score + WEIGHT_GAME*game_score
-
 
 def get_attack_score(score_cell, score_pair, score_triple, count):
     score = 0

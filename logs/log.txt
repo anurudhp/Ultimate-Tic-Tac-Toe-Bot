@@ -39,3 +39,29 @@ vs Random:
 		thus T > O
 
 	but win_pairs**2 >> win_pairs
+
+	T = +SCORE_BLOCK,
+		SCORE_BLOCK  = 10**9
+		SCORE_CELL   = 10**5
+		SCORE_PAIR   = 10**3
+		SCORE_TRIPLE = 10**0
+		SCORE_GAME_CELL   = 10**6
+		SCORE_GAME_PAIR   = 10**3
+		SCORE_GAME_TRIPLE = 10**0
+		WEIGHT_ATTACK = 10**7
+		WEIGHT_GAME = 1
+	O = -SCORE_BLOCK,
+		SCORE_BLOCK  = 10**9
+		SCORE_CELL   = 10**6
+		SCORE_PAIR   = 10**3
+		SCORE_TRIPLE = 10**0
+		SCORE_GAME_CELL   = 10**6
+		SCORE_GAME_PAIR   = 10**3
+		SCORE_GAME_TRIPLE = 10**0
+		WEIGHT_ATTACK = 10**6
+		WEIGHT_GAME = 1
+	177 - 172 | 25 games | average: 7.08 - 6.88 | diff: 0.20 [TO]
+	157 - 148 | 23 games | average: 6.82 - 6.43 | diff: 0.39 [OT]
+	348 - 50 | 31 games | average: 11.22 - 1.61 | diff: 9.61 [TR]
+	463 - 50 | 35 games | average: 13.22 - 1.42 | diff: 11.80 [OR]
+	Approx same vs each other, O is better vs random

@@ -3,56 +3,58 @@ import copy
 import sys
 
 def evaluate(board, flag):
-    SCORE_BLOCK  = 10**12
-    SCORE_CELL   = 10**10
-    SCORE_PAIR   = 10**4
+    SCORE_BLOCK  = 10**9
+    SCORE_CELL   = 10**5
+    SCORE_PAIR   = 10**3
     SCORE_TRIPLE = 10**0
-    SCORE_GAME_CELL   = 10**10
-    SCORE_GAME_PAIR   = 10**6
-    SCORE_GAME_TRIPLE = 10**2
-    WEIGHT_ATTACK = 10
+    SCORE_GAME_CELL   = 10**6
+    SCORE_GAME_PAIR   = 10**3
+    SCORE_GAME_TRIPLE = 10**0
+    WEIGHT_ATTACK = 10**7
     WEIGHT_GAME = 1
 
-    block_score = [4*[0] for i in xrange(4)]
     opp_flag = 'x' if flag == 'o' else 'o'
+    my_block_score = [4*[0] for i in xrange(4)]
+    opp_block_score = [4*[0] for i in xrange(4)]
+
+    my_game_count  = count_attacks(board.block_status, flag, 0, 0)
+    opp_game_count = count_attacks(board.block_status, opp_flag, 0, 0)
 
     attack_score = 0
+    game_score = 0
     for i in xrange(0, 4):
         for j in xrange(0, 4):
             if board.block_status[i][j] == flag:
-                block_score[i][j] = SCORE_BLOCK
+                my_block_score[i][j] = SCORE_BLOCK
             elif board.block_status[i][j] == opp_flag:
-                block_score[i][j] -= SCORE_BLOCK
+                opp_block_score[i][j] = -SCORE_BLOCK
             elif board.block_status[i][j] == '-':
-                my_score  = count_to_score(SCORE_CELL, SCORE_PAIR, SCORE_TRIPLE, count_attacks(board.board_status, flag, i, j))
-                opp_score = count_to_score(SCORE_CELL, SCORE_PAIR, SCORE_TRIPLE, count_attacks(board.board_status, opp_flag, i, j))
-                block_score[i][j] = my_score - opp_score
-            attack_score += block_score[i][j]
+                my_block_score[i][j]  = get_attack_score(SCORE_CELL, SCORE_PAIR, SCORE_TRIPLE, count_attacks(board.board_status, flag, i, j))
+                opp_block_score[i][j] = get_attack_score(SCORE_CELL, SCORE_PAIR, SCORE_TRIPLE, count_attacks(board.board_status, opp_flag, i, j))
 
-    # game score
-    game_score = 0
-    # my_game_count  = count_attacks(board.block_status, flag, 0, 0)
-    # opp_game_count = count_attacks(board.block_status, opp_flag, 0, 0)
-    # game_score += count_to_score(SCORE_GAME_CELL, SCORE_GAME_PAIR, SCORE_GAME_TRIPLE, my_game_count)
-    # game_score -= count_to_score(SCORE_GAME_CELL, SCORE_GAME_PAIR, SCORE_GAME_TRIPLE, my_game_count)
+            # assert(my_block_score[i][j] >= 0 and opp_block_score[i][j] >= 0)
+            attack_score += my_block_score[i][j] - opp_block_score[i][j]
+
+            my_game_score  = my_block_score[i][j]*get_cell_score(SCORE_GAME_CELL, SCORE_GAME_PAIR, SCORE_GAME_TRIPLE, my_game_count[i][j])
+            opp_game_score = opp_block_score[i][j]*get_cell_score(SCORE_GAME_CELL, SCORE_GAME_PAIR, SCORE_GAME_TRIPLE, opp_game_count[i][j])
+            # assert(my_game_score >= 0 and opp_game_score >= 0)
+            game_score += my_game_score - opp_game_score
 
     return WEIGHT_ATTACK*attack_score + WEIGHT_GAME*game_score
 
-def count_to_score(score_win_cell, score_win_pair, score_win_triple, count):
-    win_triples = 0
-    win_pairs   = 0
-    win_cells   = 0
-
+def get_attack_score(score_cell, score_pair, score_triple, count):
+    score = 0
     for i in xrange(4):
         for j in xrange(4):
-            if count[i][j][0] != 0:
-                win_cells += 1
-            else:
-                win_pairs += count[i][j][1]**2
-                win_triples += count[i][j][2]**2
-    # win_cells = win_cells**2
+            score += get_cell_score(score_cell, score_pair, score_triple, count[i][j])
 
-    return score_win_cell*win_cells + score_win_pair*win_pairs + score_win_triple*win_triples
+    return score
+
+def get_cell_score(score_cell, score_pair, score_triple, count):
+    if count[0] != 0:
+        return score_cell
+    else:
+        return score_pair*count[1]**2 + score_triple*count[2]**2
 
 def count_attacks(board, flag, row, col):
     l = 4*col
@@ -107,45 +109,38 @@ class Player54():
     def move(self, board, old_move, flag):
         # create copy and bind functions
         board = copy.deepcopy(board)
-        board.backtrack_move = backtrack_move.__get__(board)
+        board.backtrack = backtrack_move.__get__(board)
         board.evaluate = evaluate.__get__(board)
         # board.count_attacks = count_attacks.__get__(board)
 
         # search
         opp_flag = 'x' if flag == 'o' else 'o'
         play_move = self.minimax(board, old_move, flag, opp_flag, flag)
-        # self.must_prune = not self.must_prune
-        # play_move2 = self.minimax(board, old_move, flag, opp_flag, flag)
-        # self.must_prune = not self.must_prune
 
-        # diff_len = len(play_move[1]) - len(play_move2[1])
-        # if diff_len != 0: sys.stderr.write(str(diff_len) + '\n')
-        # assert (play_move[0] == play_move2[0])
         print play_move
         return play_move[1]
 
     # search functions
     def minimax(self, board, old_move, flag, opp_flag, max_flag, depth = 0, alpha = -INFINITY, beta = +INFINITY):
         terminal = board.find_terminal_state()
-        heuristic_estimate = board.evaluate(max_flag)
         if terminal[0] != 'CONTINUE':
             if terminal[0] == flag: return INFINITY
             if terminal[0] == 'NONE':
-                return heuristic_estimate
+                return board.evaluate(max_flag)
             return -INFINITY
 
         if depth >= self.max_depth:
-            return heuristic_estimate
+            return board.evaluate(max_flag)
 
         valid_moves = board.find_valid_move_cells(old_move)
-        random.shuffle(valid_moves)
+        if depth == 0: random.shuffle(valid_moves)
         final_score = -INFINITY if flag == max_flag else +INFINITY
 
         optimal_move = None
         for move in valid_moves:
             board.update(old_move, move, flag)
             current_score = self.minimax(board, move, opp_flag, flag, max_flag, depth + 1, alpha, beta)
-            board.backtrack_move(old_move, move, flag)
+            board.backtrack(old_move, move, flag)
 
             if flag == max_flag:
                 if final_score <= current_score:
