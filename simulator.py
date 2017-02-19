@@ -242,6 +242,7 @@ def gameplay(obj1, obj2):				#game simulator
 			pts1 = 16
 			break
 		except Exception as e:
+			print e
 			WINNER = 'P1'
 			MESSAGE = 'INVALID MOVE'
 			pts1 = 16
@@ -337,7 +338,7 @@ if __name__ == '__main__':
 		if len(sys.argv) < 3:
 			print "argument error"
 			sys.exit(1)
-		
+
 		opp = __import__(sys.argv[2])
 		if option == 'TO':
 			obj1 = team54.Player54()
