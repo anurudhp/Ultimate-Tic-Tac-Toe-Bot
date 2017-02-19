@@ -32,7 +32,7 @@ import copy
 
 INFINITY = 10**18
 SCORE_BLOCK  = 10**9
-SCORE_CELL   = 10**6
+SCORE_CELL   = 10**5
 SCORE_PAIR   = 10**3
 SCORE_TRIPLE = 10**0
 SCORE_GAME_CELL   = 10**6
@@ -42,7 +42,7 @@ WEIGHT_ATTACK = 10**7
 WEIGHT_GAME = 1
 
 class Player54():
-    def __init__(self, max_depth = 3, max_breadth = 16 ** 10, must_prune = True):
+    def __init__(self, max_depth = 2, max_breadth = 16 ** 10, must_prune = True):
         self.max_depth = max_depth
         self.max_breadth = max_breadth
         self.must_prune = must_prune
@@ -77,13 +77,13 @@ class Player54():
             self.max_flag = flag
             self.min_flag = opp_flag
 
-        self.advance(None, old_move, opp_flag, False)
+        self.advance(old_move, opp_flag, False)
 
         # search
         move_score, move_choice = self.minimax(old_move, flag, opp_flag)
         print move_score, move_choice
 
-        self.advance(None, move_choice, flag, False)
+        self.advance(move_choice, flag, False)
         return move_choice
 
     # search functions
@@ -106,9 +106,9 @@ class Player54():
         next_breadth = breadth * len(valid_moves)
 
         for current_move in valid_moves:
-            self.advance(prev_move, current_move, flag)
+            self.advance(current_move, flag)
             current_score = self.minimax(current_move, opp_flag, flag, depth + 1, next_breadth, alpha, beta)
-            self.backtrack(prev_move, current_move, flag)
+            self.backtrack(current_move, flag)
 
             if flag == self.max_flag:
                 if final_score <= current_score:
@@ -127,17 +127,18 @@ class Player54():
         return final_score
 
     # play a move, and update the heuristic estimate
-    def advance(self, old_move, current_move, flag, apply_move = True):
+    def advance(self, current_move, flag, apply_move = True):
         if apply_move:
-            self.board.update(old_move, current_move, flag)
+            self.board.update((-1, -1), current_move, flag)
         self.backtracking = False
         if current_move[0] != -1:
             self.update_heuristic(current_move)
 
     # undo a move, and update the heuristic estimate
-    def backtrack(self, old_move, current_move, flag):
+    def backtrack(self, current_move, flag):
         self.backtracking = True
         self.update_heuristic(current_move)
+        # undo board state
         x, y = current_move
         self.board.board_status[x][y] = '-'
         self.board.block_status[x >> 2][y >> 2] = '-'
