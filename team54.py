@@ -34,7 +34,7 @@ import old2
 
 INFINITY = 10**18
 SCORE_BLOCK  = 10**9
-SCORE_CELL   = 10**5
+SCORE_CELL   = 10**6
 SCORE_PAIR   = 10**3
 SCORE_TRIPLE = 10**0
 SCORE_GAME_CELL   = 10**6
@@ -44,7 +44,7 @@ WEIGHT_ATTACK = 10**7
 WEIGHT_GAME = 1
 
 class Player54():
-    def __init__(self, max_depth = 2, max_breadth = 16 ** 10, must_prune = True):
+    def __init__(self, max_depth = 3, max_breadth = 16 ** 10, must_prune = True):
         self.max_depth = max_depth
         self.max_breadth = max_breadth
         self.must_prune = must_prune
@@ -82,13 +82,13 @@ class Player54():
 
         return move_choice
 
-    def check(self):
-        actual_heuristic = old2.evaluate(self.board, self.max_flag)
-        hdiff = (self.heuristic_estimate - actual_heuristic)
-        if hdiff != 0:
-            print ">>>>>> estimate: %d, actual: %d" % (self.heuristic_estimate, actual_heuristic)
-            self.board.print_board()
-            assert(hdiff == 0)
+    # def check(self):
+    #     actual_heuristic = old2.evaluate(self.board, self.max_flag)
+    #     hdiff = (self.heuristic_estimate - actual_heuristic)
+    #     if hdiff != 0:
+    #         print ">>>>>> estimate: %d, actual: %d" % (self.heuristic_estimate, actual_heuristic)
+    #         self.board.print_board()
+    #         assert(hdiff == 0)
 
     # search functions
     def minimax(self, prev_move, flag, opp_flag, depth = 0, breadth = 1, alpha = -INFINITY, beta = +INFINITY):
@@ -100,7 +100,7 @@ class Player54():
                 return self.heuristic_estimate
             return -INFINITY
 
-        if depth > self.max_depth: # or breadth > self.max_breadth:
+        if depth >= self.max_depth: # or breadth > self.max_breadth:
             return self.heuristic_estimate
 
         valid_moves = self.board.find_valid_move_cells(prev_move)
