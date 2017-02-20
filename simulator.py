@@ -352,6 +352,12 @@ if __name__ == '__main__':
 		elif option == 'RO':
 			obj1 = Random_Player()
 			obj2 = opp.Player54()
+                elif option == 'OO':
+                        if len(sys.argv) < 4:
+                            print 'argument error'
+                            sys.exit(1)
+                        obj1 = opp.Player54()
+                        obj2 = __import__(sys.argv[3]).Player54()
 	else:
 		print 'Invalid option'
 		sys.exit(1)

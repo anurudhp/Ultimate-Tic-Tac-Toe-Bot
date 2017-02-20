@@ -100,7 +100,7 @@ def backtrack_move(board, old_move, new_move, flag):
 
 INFINITY = 10**18
 class Player54():
-    def __init__(self, max_depth = 3, must_prune = True):
+    def __init__(self, max_depth = 2, must_prune = True):
         self.max_depth = max_depth
         self.must_prune = must_prune
         print self.must_prune
@@ -124,7 +124,7 @@ class Player54():
     def minimax(self, board, old_move, flag, opp_flag, max_flag, depth = 0, alpha = -INFINITY, beta = +INFINITY):
         terminal = board.find_terminal_state()
         if terminal[0] != 'CONTINUE':
-            if terminal[0] == flag: return INFINITY
+            if terminal[0] == max_flag: return INFINITY
             if terminal[0] == 'NONE':
                 return board.evaluate(max_flag)
             return -INFINITY
