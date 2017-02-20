@@ -57,14 +57,14 @@ class Player54():
 
         # heuristic scoring values
         count = [[3*[0] for i in xrange(4)] for i in xrange(4)]
-        self.my_block_count = [[1*count for i in xrange(4)] for i in xrange(4)]
-        self.opp_block_count = [[1*count for i in xrange(4)] for i in xrange(4)]
+        self.my_block_count = [[copy.deepcopy(count) for i in xrange(4)] for i in xrange(4)]
+        self.opp_block_count = copy.deepcopy(self.my_block_count)
         self.my_block_score = [4*[0] for i in xrange(4)]
         self.opp_block_score = [4*[0] for i in xrange(4)]
         self.attack_score = 0
 
-        self.my_game_count = 1*count
-        self.opp_game_count = 1*count
+        self.my_game_count = copy.deepcopy(count)
+        self.opp_game_count = copy.deepcopy(count)
         self.my_game_score = self.opp_game_score = 0
         self.game_score = 0
 
@@ -93,7 +93,7 @@ class Player54():
         actual_heuristic = old2.evaluate(self.board, self.max_flag)
         hdiff = (self.heuristic_estimate - actual_heuristic)
         if hdiff != 0:
-            print ">>>>>>",hdiff,(self.heuristic_estimate, actual_heuristic)
+            print ">>>>>> estimate: %d, actual: %d" % (self.heuristic_estimate, actual_heuristic)
             assert(hdiff == 0)
 
         if terminal[0] != 'CONTINUE':
@@ -147,13 +147,13 @@ class Player54():
 
     # undo a move, and update the heuristic estimate
     def backtrack(self, current_move, flag):
+        self.backtracking = True
+        self.update_heuristic(current_move)
+
         # undo board state
         x, y = current_move
         self.board.board_status[x][y] = '-'
         self.board.block_status[x >> 2][y >> 2] = '-'
-
-        self.backtracking = True
-        self.update_heuristic(current_move)
 
     def update_heuristic(self, current_move):
         x, y = current_move
@@ -191,13 +191,17 @@ class Player54():
         self.opp_game_score = self.opp_block_score[row][col]*self.get_cell_score(SCORE_GAME_CELL, SCORE_GAME_PAIR, SCORE_GAME_TRIPLE, self.opp_game_count[row][col])
         # end change
 
-        print self.my_block_score[row][col]
-        print self.opp_block_score[row][col]
-        print self.my_block_count[row][col]
-        print self.opp_block_count[row][col]
+        print "my score:", self.my_block_score[row][col]
+        print "opp score:", self.opp_block_score[row][col]
+        for k in xrange(4):
+            print self.my_block_count[row][col][k]
+        print ''
+        for k in xrange(4):
+            print self.opp_block_count[row][col][k]
 
         self.attack_score += (self.my_block_score[row][col] - self.opp_block_score[row][col])
         self.game_score += (self.my_game_score - self.opp_game_score)
+        print "final: (attack_score: %d, game_score: %d)" % (self.attack_score, self.game_score)
 
         self.heuristic_estimate = WEIGHT_ATTACK*self.attack_score + WEIGHT_GAME*self.game_score
 
@@ -231,14 +235,14 @@ class Player54():
 
     def count_attacks(self, grid, count, flag, row, col, x, y):
         u, l = 4 * row, 4 * col
-        print "row: %d, col: %d, x: %d, y: %d" % (row, col, x, y)
+        print "===", flag, "row: %d, col: %d, x: %d, y: %d" % (row, col, x, y)
         # row
         self.update_count(grid, count, flag, ((u + x, l), (u + x, l + 1), (u + x, l + 2), (u + x, l + 3)))
         # col
         self.update_count(grid, count, flag, ((u, l + y), (u + 1, l + y), (u + 2, l + y), (u + 3, l + y)))
         # main diagonal
         if x == y:
-            self.update_count(grid, count, flag, ((u, l + 3), (u + 1, l + 2), (u + 2, l + 1), (u + 3, l)))
+            self.update_count(grid, count, flag, ((u, l), (u + 1, l + 1), (u + 2, l + 2), (u + 3, l + 3)))
         # back diagonal
         if x + y == 3:
-            self.update_count(grid, count, flag, ((u, l), (u + 1, l + 1), (u + 2, l + 2), (u + 3, l + 3)))
+            self.update_count(grid, count, flag, ((u, l + 3), (u + 1, l + 2), (u + 2, l + 1), (u + 3, l)))
