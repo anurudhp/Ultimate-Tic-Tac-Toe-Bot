@@ -27,7 +27,7 @@ def evaluate(board, flag):
             if board.block_status[i][j] == flag:
                 my_block_score[i][j] = SCORE_BLOCK
             elif board.block_status[i][j] == opp_flag:
-                opp_block_score[i][j] -= SCORE_BLOCK
+                opp_block_score[i][j] = SCORE_BLOCK
             elif board.block_status[i][j] == '-':
                 my_block_score[i][j]  = get_attack_score(SCORE_CELL, SCORE_PAIR, SCORE_TRIPLE, count_attacks(board.board_status, flag, i, j))
                 opp_block_score[i][j] = get_attack_score(SCORE_CELL, SCORE_PAIR, SCORE_TRIPLE, count_attacks(board.board_status, opp_flag, i, j))
@@ -38,7 +38,7 @@ def evaluate(board, flag):
             my_game_score  = my_block_score[i][j]*get_cell_score(SCORE_GAME_CELL, SCORE_GAME_PAIR, SCORE_GAME_TRIPLE, my_game_count[i][j])
             opp_game_score = opp_block_score[i][j]*get_cell_score(SCORE_GAME_CELL, SCORE_GAME_PAIR, SCORE_GAME_TRIPLE, opp_game_count[i][j])
             # assert(my_game_score >= 0 and opp_game_score >= 0)
-            game_score += my_game_score - abs(opp_game_score)
+            game_score += my_game_score - opp_game_score
 
     return WEIGHT_ATTACK*attack_score + WEIGHT_GAME*game_score
 

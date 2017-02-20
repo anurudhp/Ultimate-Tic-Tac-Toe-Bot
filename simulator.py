@@ -194,12 +194,12 @@ def gameplay(obj1, obj2):				#game simulator
 			MESSAGE = 'TIME OUT'
 			pts2 = 16
 			break
-		except Exception as e:
-			print e # DEBUG
-			WINNER = 'P2'
-			MESSAGE = 'INVALID MOVE'
-			pts2 = 16
-			break
+		# except Exception as e:
+		# 	print e # DEBUG
+		# 	WINNER = 'P2'
+		# 	MESSAGE = 'INVALID MOVE'
+		# 	pts2 = 16
+		# 	break
 		signal.alarm(0)
 
 		#check if board is not modified and move returned is valid
@@ -260,7 +260,7 @@ def gameplay(obj1, obj2):				#game simulator
 			break
 
 		status = game_board.find_terminal_state()	#find if the game has ended and if yes, find the winner
-		print status
+		# print status
 		if status[1] == 'WON':						#if the game has ended after a player move, player 2 would win
 			pts2 = 16
 			WINNER = 'P2'
