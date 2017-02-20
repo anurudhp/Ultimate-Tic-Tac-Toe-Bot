@@ -59,7 +59,7 @@ class Player54():
         self.opp_block_score = [4*[0] for i in xrange(4)]
         self.attack_score = 0
 
-        random.seed(None)
+        random.seed()
 
     def move(self, board, old_move, flag):
         # create copy and bind functions
