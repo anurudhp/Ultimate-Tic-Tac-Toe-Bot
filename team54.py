@@ -1,36 +1,6 @@
 import random
 import copy
-
 import old2
-
-# def evaluate(board, flag):
-#     opp_flag = 'x' if flag == 'o' else 'o'
-#     my_block_score = [4*[0] for i in xrange(4)]
-#     opp_block_score = [4*[0] for i in xrange(4)]
-#
-#     my_game_count  = count_attacks(board.block_status, flag, 0, 0)
-#     opp_game_count = count_attacks(board.block_status, opp_flag, 0, 0)
-#
-#     attack_score = 0
-#     game_score = 0
-#     for i in xrange(0, 4):
-#         for j in xrange(0, 4):
-#             if board.block_status[i][j] == flag:ss
-#                 my_block_score[i][j] = SCORE_BLOCK
-#                 opp_block_score[i][j] = 0
-#             elif board.block_status[i][j] == opp_flag:
-#                 opp_block_score[i][j] = SCORE_BLOCK
-#             elif board.block_status[i][j] == '-':
-#                 my_block_score[i][j]  = ...
-#                 opp_block_score[i][j] = get_attack_score(SCORE_CELL, SCORE_PAIR, SCORE_TRIPLE, count_attacks(board.board_status, opp_flag, i, j))
-#
-#             attack_score += my_block_score[i][j] - opp_block_score[i][j]
-#
-#             my_game_score  = my_block_score[i][j]*get_cell_score(SCORE_GAME_CELL, SCORE_GAME_PAIR, SCORE_GAME_TRIPLE, my_game_count[i][j])
-#             opp_game_score = opp_block_score[i][j]*get_cell_score(SCORE_GAME_CELL, SCORE_GAME_PAIR, SCORE_GAME_TRIPLE, opp_game_count[i][j])
-#             game_score += my_game_score - opp_game_score
-#
-#     return WEIGHT_ATTACK*attack_score + WEIGHT_GAME*game_score
 
 INFINITY = 10**18
 SCORE_BLOCK  = 10**9
@@ -40,11 +10,11 @@ SCORE_TRIPLE = 10**0
 SCORE_GAME_CELL   = 10**6
 SCORE_GAME_PAIR   = 10**3
 SCORE_GAME_TRIPLE = 10**0
-WEIGHT_ATTACK = 10**7
+WEIGHT_ATTACK = SCORE_GAME_CELL
 WEIGHT_GAME = 1
 
 class Player54():
-    def __init__(self, max_depth = 3, max_breadth = 16 ** 10, must_prune = True):
+    def __init__(self, max_depth = 4, max_breadth = 16 ** 10, must_prune = True):
         self.max_depth = max_depth
         self.max_breadth = max_breadth
         self.must_prune = must_prune
@@ -82,14 +52,6 @@ class Player54():
 
         return move_choice
 
-    # def check(self):
-    #     actual_heuristic = old2.evaluate(self.board, self.max_flag)
-    #     hdiff = (self.heuristic_estimate - actual_heuristic)
-    #     if hdiff != 0:
-    #         print ">>>>>> estimate: %d, actual: %d" % (self.heuristic_estimate, actual_heuristic)
-    #         self.board.print_board()
-    #         assert(hdiff == 0)
-
     # search functions
     def minimax(self, prev_move, flag, opp_flag, depth = 0, breadth = 1, alpha = -INFINITY, beta = +INFINITY):
         terminal = self.board.find_terminal_state()
@@ -111,10 +73,8 @@ class Player54():
         next_breadth = breadth * len(valid_moves)
 
         for current_move in valid_moves:
-            # print
             self.advance(current_move, flag)
             current_score = self.minimax(current_move, opp_flag, flag, depth + 1, next_breadth, alpha, beta)
-            # print
             self.backtrack(current_move, flag)
 
             if flag == self.max_flag:
@@ -135,45 +95,25 @@ class Player54():
 
     # play a move, and update the heuristic estimate
     def advance(self, current_move, flag, apply_move = True):
-        # print self.my_block_score
-        # print self.opp_block_score
-        # print "~~~~~> advancing", current_move, flag
         if apply_move:
             self.board.update((-1, -1), current_move, flag)
         if current_move[0] != -1:
             self.update_heuristic(current_move)
-        # print self.my_block_score
-        # print self.opp_block_score
-        # self.check()
 
     # undo a move, and update the heuristic estimate
     def backtrack(self, current_move, flag):
-        # print self.my_block_score
-        # print self.opp_block_score
-        # print "~~~~~> backtracking", current_move, flag
-        # undo board state
         x, y = current_move
         self.board.board_status[x][y] = '-'
         self.board.block_status[x >> 2][y >> 2] = '-'
 
         self.update_heuristic(current_move)
 
-        # print self.my_block_score
-        # print self.opp_block_score
-
-        # self.check()
-
     def update_heuristic(self, current_move):
         x, y = current_move
         row, col = x / 4, y / 4
         x, y = x % 4, y % 4
 
-        # print "updating: ", current_move
-        # print "attack_score: %d --->" % (self.attack_score),
-
         self.attack_score -= (self.my_block_score[row][col] - self.opp_block_score[row][col])
-
-        # print "attack_score: %d" % (self.attack_score)
 
         # change
         if self.board.block_status[row][col] == self.max_flag:
@@ -199,11 +139,7 @@ class Player54():
                 game_score += (my_game_score - opp_game_score)
         # end change
 
-        # print "my score:", self.my_block_score[row][col]
-        # print "opp score:", self.opp_block_score[row][col]
-
         self.attack_score += (self.my_block_score[row][col] - self.opp_block_score[row][col])
-        # print "final: (attack_score: %d, game_score: %d)" % (self.attack_score, game_score)
 
         self.heuristic_estimate = WEIGHT_ATTACK*self.attack_score + WEIGHT_GAME*game_score
 
@@ -222,7 +158,6 @@ class Player54():
 
     def update_count(self, count, grid, flag, posList):
         ans = []
-        # print "posList: ", 
         for pos in posList:
             # print pos
             elem = grid[pos[0]][pos[1]]
@@ -231,7 +166,6 @@ class Player54():
             elif elem != flag:
                 ans = []
                 break
-        # print "ans: ", ans
         if len(ans) != 4:
             for pos in ans:
                 count[pos[0] % 4][pos[1] % 4][len(ans) - 1] += 1
