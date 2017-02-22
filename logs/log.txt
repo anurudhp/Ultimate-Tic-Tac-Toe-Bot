@@ -56,4 +56,37 @@ vs Random:
 	203 - 67 | 18 games | average: 11.27 - 3.72 | diff: 7.55 [TT 3 2]
 	92 - 253 | 23 games | average: 4.00 - 11.00 | diff: -7.00 [TT 2 3]
 
+	WEIGHT_ATTACK=10*game_cell
+	87 - 141 | 15 games | average: 5.80 - 9.40 | diff: -3.60 [TO aibot5 aiBot] (16 - 0)
+	111 - 121 | 16 games | average: 6.93 - 7.56 | diff: -0.62 [OT aibot5 aiBot] (16 - 0)
 	
+	WEIGHT_GAME = 0
+	58 - 154 | 14 games | average: 4.14 - 11.00 | diff: -6.85 [TO aibot5 aiBot] (0 - 16)
+	162 - 54 | 14 games | average: 11.57 - 3.85 | diff: 7.71 [OT aibot5 aiBot] (5 - 8)
+	significant number of losses.
+
+	weight_attack = 5*
+	53 - 131 | 12 games | average: 4.41 - 10.91 | diff: -6.50 [TO aibot5 aiBot] (0 - 16)
+	148 - 18 | 11 games | average: 13.45 - 1.63 | diff: 11.81 [OT aibot5 aiBot] (16 - 0)
+	
+	weight_attack = 10*
+	113 - 114 | 16 games | average: 7.06 - 7.12 | diff: -0.06 [TO aibot5 aiBot] (10 - 4)
+	135 - 44 | 12 games | average: 11.25 - 3.66 | diff: 7.58 [OT aibot5 aiBot] (8 - 6)
+
+	weight_attack = 10**5
+	76 - 105 | 12 games | average: 6.33 - 8.75 | diff: -2.41 [TO aibot5 aiBot] (7 - 6)
+	122 - 44 | 11 games | average: 11.09 - 4.00 | diff: 7.09 [OT aibot5 aiBot] (7 - 7)
+	
+	weigt_attack = weight_game
+	105 - 136 | 18 games | average: 5.83 - 7.55 | diff: -1.72 [TO aibot5 aiBot] (0 - 16)
+	97 - 145 | 17 games | average: 5.70 - 8.52 | diff: -2.82 [OT aibot5 aiBot] (9 - 5)
+
+	weight_attack = weight_game/2
+	92 - 59 | 11 games | average: 8.36 - 5.36 | diff: 3.00 [TO aibot5 aiBot] (won 3, lost 0)
+	70 - 84 | 11 games | average: 6.36 - 7.63 | diff: -1.27 [OT aibot5 aiBot] (won 3, lost 1)
+	draws horribly, wins semi-regularly
+
+	powers of hundred instead of thousand
+	95 - 96 | 14 games | average: 6.78 - 6.85 | diff: -0.07 [TO aibot5 aiBot] (0 - 16)
+	90 - 104 | 14 games | average: 6.42 - 7.42 | diff: -1.00 [OT aibot5 aiBot] (5 - 8)
+	about the same, probbly worse
