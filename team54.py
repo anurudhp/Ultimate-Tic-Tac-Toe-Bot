@@ -154,7 +154,7 @@ class Player54():
         if count[0] != 0:
             return score_cell
         else:
-            return score_pair*count[1]**2 + score_triple*count[2]**2
+            return score_pair*(count[1]**2) + score_triple*(count[2]**2)
 
     def update_count(self, count, grid, flag, posList):
         ans = []

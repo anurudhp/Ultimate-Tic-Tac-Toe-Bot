@@ -90,3 +90,16 @@ vs Random:
 	95 - 96 | 14 games | average: 6.78 - 6.85 | diff: -0.07 [TO aibot5 aiBot] (0 - 16)
 	90 - 104 | 14 games | average: 6.42 - 7.42 | diff: -1.00 [OT aibot5 aiBot] (5 - 8)
 	about the same, probbly worse
+
+	no square in pair, triple:
+	66 - 139 | 15 games | average: 4.40 - 9.26 | diff: -4.86 [TO aibot5 aiBot] (0 - 16)
+	94 - 75 | 12 games | average: 7.83 - 6.25 | diff: 1.58 [OT aibot5 aiBot] (7 - 6)
+	fucked
+
+	square vs no square
+	158 - 172 | 23 games | average: 6.86 - 7.47 | diff: -0.60 [TO opp] (6 - 6)
+	113 - 172 | 20 games | average: 5.65 - 8.60 | diff: -2.95 [OT opp] (0 - 16)
+	Why is starting second still better?
+	actually square is better still
+
+	

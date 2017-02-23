@@ -10,11 +10,11 @@ SCORE_TRIPLE = 10**0
 SCORE_GAME_CELL   = 10**6
 SCORE_GAME_PAIR   = 10**3
 SCORE_GAME_TRIPLE = 10**0
-WEIGHT_ATTACK = 10*SCORE_GAME_CELL
-WEIGHT_GAME = 1
+WEIGHT_ATTACK = 1
+WEIGHT_GAME = 2
 
 class Player54():
-    def __init__(self, max_depth = 2, max_breadth = 16 ** 10, must_prune = True):
+    def __init__(self, max_depth = 3, max_breadth = 16 ** 10, must_prune = True):
         self.max_depth = max_depth
         self.max_breadth = max_breadth
         self.must_prune = must_prune
@@ -154,7 +154,7 @@ class Player54():
         if count[0] != 0:
             return score_cell
         else:
-            return score_pair*count[1]**2 + score_triple*count[2]**2
+            return score_pair*count[1] + score_triple*count[2]
 
     def update_count(self, count, grid, flag, posList):
         ans = []
