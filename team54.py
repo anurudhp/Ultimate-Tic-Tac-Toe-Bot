@@ -11,7 +11,7 @@ SCORE_GAME_CELL   = 10**6
 SCORE_GAME_PAIR   = 10**3
 SCORE_GAME_TRIPLE = 10**0
 WEIGHT_ATTACK = 1
-WEIGHT_GAME = 2
+WEIGHT_GAME = 1000
 
 class Player54():
     def __init__(self, max_depth = 3, max_breadth = 16 ** 10, must_prune = True):

@@ -102,4 +102,28 @@ vs Random:
 	Why is starting second still better?
 	actually square is better still
 
+	weight_attack = 1 vs weight_attack = score_game_cell
+	282 - 95 | 25 games | average: 11.28 - 3.80 | diff: 7.48 [TO opp]
+	113 - 231 | 23 games | average: 4.91 - 10.04 | diff: -5.13 [OT opp] (0 - 16)
+	wins a lot, but draws slightly bad
+
 	
+	weight_game = 2 vs weight_game = 1
+	121 - 83 | 14 games | average: 8.64 - 5.92 | diff: 2.71 [TO opp] (0 - 16)
+	131 - 96 | 16 games | average: 8.18 - 6.00 | diff: 2.18 [OT opp] (9 - 7)
+	not much difference. first wins. T is slightly better
+
+	10 vs 2
+	280 - 310 | 42 games | average: 6.66 - 7.38 | diff: -0.71 [TO opp] (7 - 7)
+	267 - 324 | 40 games | average: 6.67 - 8.10 | diff: -1.42 [OT opp] (6 - 9)
+	2nd wins. weird
+
+	1000 vs 2
+	148 - 141 | 20 games | average: 7.40 - 7.05 | diff: 0.35 [TO opp] (0 - 16)
+	124 - 144 | 18 games | average: 6.88 - 8.00 | diff: -1.11 [OT opp] (8 - 6)
+	high variance.
+
+	1000 vs saurabh
+	59 - 114 | 13 games | average: 4.53 - 8.76 | diff: -4.23 [TO aibot5 aiBot] (2 - 10)
+	55 - 100 | 11 games | average: 5.00 - 9.09 | diff: -4.09 [OT aibot5 aiBot] (6 - 6)
+	second has significant advantage. draws are shit
