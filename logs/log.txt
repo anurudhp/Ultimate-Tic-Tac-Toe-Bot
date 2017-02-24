@@ -193,3 +193,12 @@ vs Random:
 
 	no losses, almost all draws are wins
 
+	vs old_best
+	176 - 64 | 15 games | average: 11.73 - 4.26 | diff: 7.46 [TO old_best] (0 - 16)
+	31 - 174 | 13 games | average: 2.38 - 13.38 | diff: -11.00 [OT old_best] (0 - 16)
+	occasionally loses. otherwise great
+
+	16 - 144 | 10 games | average: 1.60 - 14.40 | diff: -12.80 [RT] (0 - 16)
+	128 - 16 | 9 games | average: 14.22 - 1.77 | diff: 12.44 [TR] (16 - 0)
+	Lost twice in each. otherwise straight wins
+	
