@@ -34,25 +34,23 @@ class Player54():
 
     def move(self, board, old_move, flag):
         # create copy and bind functions
-        opp_flag = 'x' if flag == 'o' else 'o'
 
         if self.board == None:
+            opp_flag = 'x' if flag == 'o' else 'o'
             self.max_flag = flag
             self.min_flag = opp_flag
         self.board = board
-        self.advance(old_move, opp_flag, False)
+        self.advance(old_move, self.min_flag, False)
 
         # search
-        move_score, move_choice = self.minimax(old_move, flag, opp_flag)
+        move_score, move_choice = self.minimax(old_move, flag, self.min_flag)
         print move_score, move_choice
 
         self.advance(move_choice, flag, True)
         x, y = move_choice
         self.board.board_status[x][y] = '-'
         self.board.block_status[x >> 2][y >> 2] = '-'
-
-        self.debug = False
-
+        
         return move_choice
 
     def check(self):
