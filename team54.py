@@ -10,8 +10,8 @@ SCORE_TRIPLE = 10**0
 SCORE_GAME_CELL   = 10**6
 SCORE_GAME_PAIR   = 10**3
 SCORE_GAME_TRIPLE = 10**0
-WEIGHT_ATTACK = 1
-WEIGHT_GAME = 1000
+WEIGHT_ATTACK = 1000
+WEIGHT_GAME = 1
 
 class Player54():
     def __init__(self, max_depth = 3, max_breadth = 16 ** 10, must_prune = True):
@@ -29,7 +29,7 @@ class Player54():
         self.opp_block_score = [4*[0] for i in xrange(4)]
         self.attack_score = 0
 
-        random.seed()
+        random.seed(1)
 
     def move(self, board, old_move, flag):
         # create copy and bind functions
@@ -154,7 +154,7 @@ class Player54():
         if count[0] != 0:
             return score_cell
         else:
-            return score_pair*(count[1]**2) + score_triple*(count[2]**2)
+            return score_pair*(count[1]) + score_triple*(count[2])
 
     def update_count(self, count, grid, flag, posList):
         ans = []
