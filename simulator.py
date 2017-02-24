@@ -350,7 +350,7 @@ if __name__ == '__main__':
             if len(sys.argv) == 3:
                 opp = opp.Player54()
             else:
-                opp = eval('opp.' + sys.argv[3] + '(3)')
+                opp = eval('opp.' + sys.argv[3] + '(6)')
 
             if option == 'TO':
                 obj1 = team54.Player54()

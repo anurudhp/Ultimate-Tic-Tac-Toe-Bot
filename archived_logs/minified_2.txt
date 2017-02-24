@@ -1,0 +1,240 @@
+>>>  (7, 11)
+	val = -996018014003
+	>>>  (12, 13)
+		val = -996018014003
+		>>>  (0, 4)
+			min at move: -1000000000000000000 (8, 0)
+		<<<  (0, 4)
+		>>>  (1, 4)
+			min at move: -1000000000000000000 (8, 0)
+		<<<  (1, 4)
+		>>>  (2, 4)
+			min at move: -1000000000000000000 (8, 0)
+		<<<  (2, 4)
+		>>>  (2, 7)
+			min at move: -998022015003 (10, 14)
+		<<<  (2, 7)
+		max at move: -998022015003 (2, 7)
+	<<<  (12, 13)
+	>>>  (12, 14)
+		val = -996020011003
+		>>>  (1, 8)
+			min at move: -1000000000000000000 (8, 0)
+		<<<  (1, 8)
+		>>>  (1, 9)
+			min at move: -1000000000000000000 (8, 0)
+		<<<  (1, 9)
+		>>>  (2, 8)
+			min at move: -1000000000000000000 (8, 0)
+		<<<  (2, 8)
+		>>>  (2, 9)
+			min at move: -1000012013003 (8, 4)
+		<<<  (2, 9)
+		>>>  (2, 10)
+			min at move: -1997016018006 (9, 11)
+		<<<  (2, 10)
+		>>>  (3, 10)
+			min at move: -1995022007003 (0, 4)
+		<<<  (3, 10)
+		>>>  (3, 11)
+			min at move: -998020008000 (13, 14)
+		<<<  (3, 11)
+		max at move: -998020008000 (3, 11)
+	<<<  (12, 14)
+	>>>  (13, 14)
+		val = -998020011003
+		>>>  (4, 10)
+			min at move: -999021018000 (2, 10)
+		<<<  (4, 10)
+		>>>  (4, 11)
+			min at move: -1997024010003 (0, 4)
+		<<<  (4, 11)
+		>>>  (5, 8)
+			min at move: -1997017014003 (0, 4)
+		<<<  (5, 8)
+		>>>  (5, 10)
+			min at move: -1999026016000 (5, 8)
+		<<<  (5, 10)
+		>>>  (5, 11)
+			min at move: -1997022014003 (0, 4)
+		<<<  (5, 11)
+		>>>  (7, 9)
+			min at move: -1000000000000000000 (8, 0)
+		<<<  (7, 9)
+		>>>  (7, 10)
+			min at move: -1998020014003 (0, 4)
+		<<<  (7, 10)
+		max at move: -999021018000 (4, 10)
+	<<<  (13, 14)
+	>>>  (14, 15)
+		val = -996018014003
+		>>>  (8, 12)
+			min at move: -1000000000000000000 (8, 0)
+		<<<  (8, 12)
+		>>>  (8, 13)
+			min at move: -1996018012003 (0, 4)
+		<<<  (8, 13)
+		>>>  (10, 13)
+			min at move: -1000008017003 (8, 4)
+		<<<  (10, 13)
+		>>>  (10, 14)
+			min at move: -16015000 (9, 11)
+		<<<  (10, 14)
+		max at move: -16015000 (10, 14)
+	<<<  (14, 15)
+	>>>  (15, 14)
+		val = -996020011003
+		>>>  (0, 4)
+			min at move: -1000000000000000000 (8, 0)
+		<<<  (0, 4)
+		>>>  (1, 4)
+			min at move: -1000000000000000000 (8, 0)
+		<<<  (1, 4)
+		>>>  (1, 8)
+			min at move: -1000000000000000000 (8, 0)
+		<<<  (1, 8)
+		>>>  (1, 9)
+			min at move: -1000000000000000000 (8, 0)
+		<<<  (1, 9)
+		>>>  (2, 4)
+			min at move: -1000000000000000000 (8, 0)
+		<<<  (2, 4)
+		>>>  (2, 7)
+			min at move: -998024012003 (10, 14)
+		<<<  (2, 7)
+		max at move: -998024012003 (2, 7)
+	<<<  (15, 14)
+	min at move: -999021018000 (13, 14)
+ <<<  (7, 11)
+
+ ==============Board State==============
+
+ o - - x  - x o x  x x x o  o o o o
+ o - - x  - x o o  - - x x  - o x x
+ - x - x  - o x -  - - - o  - x x -
+ - - - x  x x o x  o o - -  x o o o
+
+ - o o -  - o - -  x o - -  o - - o
+ - - - -  - x x -  - o - -  o x - -
+ - - - -  x x o x  x o o o  o - x -
+ x x x x  o o o o  x - - o  o - - x
+
+ - x x x  - x x -  - o - x  - - o x
+ - - - -  o x x -  o o o -  x x o x
+ x - o o  o o - -  - x - x  o - - -
+ - - x o  o - o x  - - o x  - x o -
+
+ - o x x  o o o o  - x - x  o - - x
+ - x x o  - - - x  x o x -  o o - o
+ o o x o  - - - x  - x o o  o o x -
+ - o x -  - - - x  x - - -  x x - o
+
+==============Block State==============
+x - - o
+x o - o
+- - - -
+x o x -
+=======================================
+
+
+(12, 13)
+('CONTINUE', '-')
+==============Board State==============
+
+ o - - x  - x o x  x x x o  o o o o
+ o - - x  - x o o  - - x x  - o x x
+ - x - x  - o x -  - - - o  - x x -
+ - - - x  x x o x  o o - -  x o o o
+
+ - o o -  - o - -  x o - -  o - - o
+ - - - -  - x x -  - o - -  o x - -
+ - - - -  x x o x  x o o o  o - x -
+ x x x x  o o o o  x - - o  o - - x
+
+ - x x x  - x x -  - o - x  - - o x
+ - - - -  o x x -  o o o -  x x o x
+ x - o o  o o - -  - x - x  o - - -
+ - - x o  o - o x  - - o x  - x o -
+
+ - o x x  o o o o  - x - x  o x - x
+ - x x o  - - - x  x o x -  o o - o
+ o o x o  - - - x  - x o o  o o x -
+ - o x -  - - - x  x - - -  x x - o
+
+==============Block State==============
+x - - o
+x o - o
+- - - -
+x o x -
+=======================================
+
+
+-1000000000000000000 (1, 4)
+==============Board State==============
+
+ o - - x  - x o x  x x x o  o o o o
+ o - - x  o x o o  - - x x  - o x x
+ - x - x  - o x -  - - - o  - x x -
+ - - - x  x x o x  o o - -  x o o o
+
+ - o o -  - o - -  x o - -  o - - o
+ - - - -  - x x -  - o - -  o x - -
+ - - - -  x x o x  x o o o  o - x -
+ x x x x  o o o o  x - - o  o - - x
+
+ - x x x  - x x -  - o - x  - - o x
+ - - - -  o x x -  o o o -  x x o x
+ x - o o  o o - -  - x - x  o - - -
+ - - x o  o - o x  - - o x  - x o -
+
+ - o x x  o o o o  - x - x  o x - x
+ - x x o  - - - x  x o x -  o o - o
+ o o x o  - - - x  - x o o  o o x -
+ - o x -  - - - x  x - - -  x x - o
+
+==============Block State==============
+x - - o
+x o - o
+- - - -
+x o x -
+=======================================
+
+
+(8, 0)
+('x', 'WON')
+==============Board State==============
+
+ o - - x  - x o x  x x x o  o o o o
+ o - - x  o x o o  - - x x  - o x x
+ - x - x  - o x -  - - - o  - x x -
+ - - - x  x x o x  o o - -  x o o o
+
+ - o o -  - o - -  x o - -  o - - o
+ - - - -  - x x -  - o - -  o x - -
+ - - - -  x x o x  x o o o  o - x -
+ x x x x  o o o o  x - - o  o - - x
+
+ x x x x  - x x -  - o - x  - - o x
+ - - - -  o x x -  o o o -  x x o x
+ x - o o  o o - -  - x - x  o - - -
+ - - x o  o - o x  - - o x  - x o -
+
+ - o x x  o o o o  - x - x  o x - x
+ - x x o  - - - x  x o x -  o o - o
+ o o x o  - - - x  - x o o  o o x -
+ - o x -  - - - x  x - - -  x x - o
+
+==============Block State==============
+x - - o
+x o - o
+x - - -
+x o x -
+=======================================
+
+
+Winner: P1
+Message WON
+x: 5  o: 4  d: 0
+Player 1 points: 16
+Player 2 points: 0
+arjun@kitty ~/courses/ai/ai-assigment-1 %                               
