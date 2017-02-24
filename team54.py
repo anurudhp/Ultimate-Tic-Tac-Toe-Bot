@@ -31,7 +31,7 @@ class Player54():
         self.attack_score = 0
         self.debug = False
 
-        random.seed(1)
+        random.seed()
 
     def move(self, board, old_move, flag):
         # if old_move == (13, 6):
@@ -187,7 +187,7 @@ class Player54():
         if count[0] != 0:
             return score_cell
         else:
-            return score_pair*(count[1]) + score_triple*(count[2])
+            return score_pair*(count[1]**2) + score_triple*(count[2]**2)
 
     def update_count(self, count, grid, flag, posList):
         ans = []

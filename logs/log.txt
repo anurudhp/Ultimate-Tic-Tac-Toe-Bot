@@ -127,3 +127,9 @@ vs Random:
 	59 - 114 | 13 games | average: 4.53 - 8.76 | diff: -4.23 [TO aibot5 aiBot] (2 - 10)
 	55 - 100 | 11 games | average: 5.00 - 9.09 | diff: -4.09 [OT aibot5 aiBot] (6 - 6)
 	second has significant advantage. draws are shit
+
+	fixed 1000 vs saurabh
+	77 - 72 | 11 games | average: 7.00 - 6.54 | diff: 0.45 [TO aibot5 aiBot] (7 - 5)
+	54 - 82 | 10 games | average: 5.40 - 8.20 | diff: -2.80 [OT aibot5 aiBot] (7 - 6)
+
+	
