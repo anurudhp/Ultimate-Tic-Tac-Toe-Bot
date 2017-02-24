@@ -14,7 +14,7 @@ WEIGHT_ATTACK = 1000
 WEIGHT_GAME = 1
 
 class Player54():
-    def __init__(self, max_depth = 4, max_breadth = 16 ** 10, must_prune = True):
+    def __init__(self, max_depth = 3, max_breadth = 16 ** 10, must_prune = True):
         self.max_depth = max_depth
         self.max_breadth = max_breadth
         self.must_prune = must_prune
@@ -29,15 +29,10 @@ class Player54():
         self.my_block_score = [4*[0] for i in xrange(4)]
         self.opp_block_score = [4*[0] for i in xrange(4)]
         self.attack_score = 0
-        self.debug = False
 
         random.seed()
 
     def move(self, board, old_move, flag):
-        # if old_move == (12, 13):
-        #     self.debug = True
-            # self.must_prune = False
-        
         # create copy and bind functions
         opp_flag = 'x' if flag == 'o' else 'o'
 
@@ -45,13 +40,13 @@ class Player54():
             self.max_flag = flag
             self.min_flag = opp_flag
         self.board = board
-        self.advance(old_move, opp_flag, self.debug, False)
+        self.advance(old_move, opp_flag, False)
 
         # search
         move_score, move_choice = self.minimax(old_move, flag, opp_flag)
         print move_score, move_choice
 
-        self.advance(move_choice, flag, self.debug, True)
+        self.advance(move_choice, flag, True)
         x, y = move_choice
         self.board.board_status[x][y] = '-'
         self.board.block_status[x >> 2][y >> 2] = '-'
@@ -61,7 +56,7 @@ class Player54():
         return move_choice
 
     def check(self):
-        return
+        assert(False)
         if self.heuristic_estimate == INFINITY or self.heuristic_estimate == -INFINITY:
             return
         actual_heuristic = old2.evaluate(self.board, self.max_flag)
@@ -73,39 +68,23 @@ class Player54():
 
     # search functions
     def minimax(self, prev_move, flag, opp_flag, depth = 0, breadth = 1, alpha = -INFINITY, beta = +INFINITY):
-        # terminal = self.board.find_terminal_state()
-
-        # if terminal[0] != 'CONTINUE':
-        #     if terminal[0] == self.max_flag: return INFINITY
-        #     if terminal[0] == 'NONE':
-        #         return self.heuristic_estimate
-        #     return -INFINITY
-        cond = self.debug
-        if cond:
-            print depth*'\t', "val =", self.heuristic_estimate
         if depth >= self.max_depth: # or breadth > self.max_breadth:
             return self.heuristic_estimate
 
         valid_moves = self.board.find_valid_move_cells(prev_move)
         if depth == 0: random.shuffle(valid_moves)
 
-        # final_score = -INFINITY if flag == self.max_flag else +INFINITY
         final_score = None
         optimal_move = None
         next_breadth = breadth * len(valid_moves)
 
         for current_move in valid_moves:
-            if cond:
-                print depth*'\t',
-
-            if self.advance(current_move, flag, cond):
+            if self.advance(current_move, flag):
                 current_score = self.heuristic_estimate
             else:
                 current_score = self.minimax(current_move, opp_flag, flag, depth + 1, next_breadth, alpha, beta)
 
-            if cond:
-                print depth*'\t',
-            self.backtrack(current_move, flag, cond)
+            self.backtrack(current_move, flag)
 
             if flag == self.max_flag:
                 if final_score is None or final_score < current_score:
@@ -120,33 +99,21 @@ class Player54():
 
             if self.must_prune and beta <= alpha: break
 
-        if self.debug:
-            print depth*'\t', 'min' if flag == self.min_flag else 'max', "at move:", final_score, optimal_move
         if depth == 0: return final_score, optimal_move
         return final_score
 
     # play a move, and update the heuristic estimate
-    def advance(self, current_move, flag, debug, apply_move = True):
-        if debug:
-            print ">>> ", current_move
-        # if apply_move:
-            # self.board.update((-1, -1), current_move, flag)
+    def advance(self, current_move, flag, apply_move = True):
         if current_move[0] != -1:
             x, y = current_move
             row, col = x / 4, y / 4
             self.board.board_status[x][y] = flag
             x, y = x % 4, y % 4
-            status = self.update_heuristic(row, col, x, y)
-            self.check()
-            return status
-
-        # return status
+            return self.update_heuristic(row, col, x, y)
         return False
 
     # undo a move, and update the heuristic estimate
-    def backtrack(self, current_move, flag, debug):
-        if debug:
-            print "<<< ", current_move
+    def backtrack(self, current_move, flag):
         x, y = current_move
         row, col = x / 4, y / 4
         
@@ -155,7 +122,6 @@ class Player54():
 
         x, y = x % 4, y % 4
         self.update_heuristic(row, col, x, y)
-        self.check()
 
     def update_heuristic(self, row, col, x, y):
         self.attack_score -= (self.my_block_score[row][col] - self.opp_block_score[row][col])
