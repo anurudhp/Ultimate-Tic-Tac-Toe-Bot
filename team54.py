@@ -1,5 +1,5 @@
 import random
-import copy
+from copy import deepcopy
 import old2
 
 INFINITY = 10**18
@@ -23,15 +23,21 @@ class Player54():
         self.min_flag = None
         self.board = None
         self.heuristic_estimate = 0
+        self.count_template = [[3*[0] for i in xrange(4)] for i in xrange(4)]
 
         # heuristic scoring values
         self.my_block_score = [4*[0] for i in xrange(4)]
         self.opp_block_score = [4*[0] for i in xrange(4)]
         self.attack_score = 0
+        self.debug = False
 
         random.seed(1)
 
     def move(self, board, old_move, flag):
+        # if old_move == (13, 6):
+            # self.debug = True
+            # self.must_prune = False
+
         # create copy and bind functions
         opp_flag = 'x' if flag == 'o' else 'o'
 
@@ -39,18 +45,29 @@ class Player54():
             self.max_flag = flag
             self.min_flag = opp_flag
         self.board = board
-        self.advance(old_move, opp_flag, False)
+        self.advance(old_move, opp_flag, self.debug, False)
 
         # search
         move_score, move_choice = self.minimax(old_move, flag, opp_flag)
         print move_score, move_choice
 
-        self.advance(move_choice, flag, True)
+        self.advance(move_choice, flag, self.debug, True)
         x, y = move_choice
         self.board.board_status[x][y] = '-'
         self.board.block_status[x >> 2][y >> 2] = '-'
 
+        self.debug = False
+
         return move_choice
+
+    def check(self):
+        return
+        actual_heuristic = old2.evaluate(self.board, self.max_flag)
+        hdiff = (self.heuristic_estimate - actual_heuristic)
+        if hdiff != 0:
+            print ">>>>>> estimate: %d, actual: %d" % (self.heuristic_estimate, actual_heuristic)
+            self.board.print_board()
+            assert(hdiff == 0)
 
     # search functions
     def minimax(self, prev_move, flag, opp_flag, depth = 0, breadth = 1, alpha = -INFINITY, beta = +INFINITY):
@@ -63,50 +80,65 @@ class Player54():
             return -INFINITY
 
         if depth >= self.max_depth: # or breadth > self.max_breadth:
+            # if self.debug:
+                # print depth*'\t', "val =", self.heuristic_estimate
             return self.heuristic_estimate
 
         valid_moves = self.board.find_valid_move_cells(prev_move)
         if depth == 0: random.shuffle(valid_moves)
 
-        final_score = -INFINITY if flag == self.max_flag else +INFINITY
+        # final_score = -INFINITY if flag == self.max_flag else +INFINITY
+        final_score = None
         optimal_move = None
         next_breadth = breadth * len(valid_moves)
 
         for current_move in valid_moves:
-            self.advance(current_move, flag)
+            if self.debug and depth < 2:
+                print depth*'\t',
+            self.advance(current_move, flag, self.debug and depth < 2)
             current_score = self.minimax(current_move, opp_flag, flag, depth + 1, next_breadth, alpha, beta)
-            self.backtrack(current_move, flag)
+            if self.debug and depth < 2:
+                print depth*'\t',
+            self.backtrack(current_move, flag, self.debug and depth < 2)
 
             if flag == self.max_flag:
-                if final_score <= current_score:
+                if final_score is None or final_score < current_score:
                     final_score = current_score
                     optimal_move = current_move
                 alpha = max(alpha, final_score)
             else:
-                if final_score >= current_score:
+                if final_score is None or final_score > current_score:
                     final_score = current_score
                     optimal_move = current_move
                 beta = min(beta, final_score)
 
             if self.must_prune and beta <= alpha: break
 
+        # if self.debug:
+        #     print depth*'\t', 'min' if flag == self.min_flag else 'max', "at move:", final_score, optimal_move
         if depth == 0: return final_score, optimal_move
         return final_score
 
     # play a move, and update the heuristic estimate
-    def advance(self, current_move, flag, apply_move = True):
+    def advance(self, current_move, flag, debug, apply_move = True):
+        # if debug:
+        #     print ">>> ", current_move
         if apply_move:
             self.board.update((-1, -1), current_move, flag)
         if current_move[0] != -1:
             self.update_heuristic(current_move)
+        self.check()
 
     # undo a move, and update the heuristic estimate
-    def backtrack(self, current_move, flag):
+    def backtrack(self, current_move, flag, debug):
+        # if debug:
+        #     print "<<< ", current_move
         x, y = current_move
         self.board.board_status[x][y] = '-'
         self.board.block_status[x >> 2][y >> 2] = '-'
 
         self.update_heuristic(current_move)
+        self.check()
 
     def update_heuristic(self, current_move):
         x, y = current_move
@@ -150,6 +182,7 @@ class Player54():
             for j in xrange(4):
                 score += self.get_cell_score(score_cell, score_pair, score_triple, count[i][j])
         return score
+
     def get_cell_score(self, score_cell, score_pair, score_triple, count):
         if count[0] != 0:
             return score_cell
@@ -175,7 +208,7 @@ class Player54():
         r = l + 4
         u = 4*row
         d = u + 4
-        count = [[3*[0] for i in xrange(4)] for i in xrange(4)]
+        count = deepcopy(self.count_template)
 
         # rows
         for i in xrange(u, d):

@@ -4,13 +4,13 @@ import sys
 
 def evaluate(board, flag):
     SCORE_BLOCK  = 10**9
-    SCORE_CELL   = 10**5
+    SCORE_CELL   = 10**6
     SCORE_PAIR   = 10**3
     SCORE_TRIPLE = 10**0
     SCORE_GAME_CELL   = 10**6
     SCORE_GAME_PAIR   = 10**3
     SCORE_GAME_TRIPLE = 10**0
-    WEIGHT_ATTACK = 10**7
+    WEIGHT_ATTACK = 10**3
     WEIGHT_GAME = 1
 
     opp_flag = 'x' if flag == 'o' else 'o'
@@ -54,7 +54,7 @@ def get_cell_score(score_cell, score_pair, score_triple, count):
     if count[0] != 0:
         return score_cell
     else:
-        return score_pair*count[1]**2 + score_triple*count[2]**2
+        return score_pair*count[1] + score_triple*count[2]
 
 def count_attacks(board, flag, row, col):
     l = 4*col
