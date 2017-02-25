@@ -1,6 +1,6 @@
 import random
 from copy import deepcopy
-import old2
+# import old2
 
 INFINITY = 10**18
 SCORE_BLOCK  = 10**9
@@ -14,7 +14,7 @@ WEIGHT_ATTACK = 1000
 WEIGHT_GAME = 1
 
 class Player54():
-    def __init__(self, max_depth = 3, max_breadth = 16 ** 10, must_prune = True):
+    def __init__(self, max_depth = 3, max_breadth = 16**10, must_prune = True):
         self.max_depth = max_depth
         self.max_breadth = max_breadth
         self.must_prune = must_prune
@@ -50,10 +50,11 @@ class Player54():
         x, y = move_choice
         self.board.board_status[x][y] = '-'
         self.board.block_status[x >> 2][y >> 2] = '-'
-        
+
         return move_choice
 
     def check(self):
+        print "CHECK SHOULD NEVER BE CALLED !!"
         assert(False)
         if self.heuristic_estimate == INFINITY or self.heuristic_estimate == -INFINITY:
             return
