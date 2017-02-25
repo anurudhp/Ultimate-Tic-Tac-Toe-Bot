@@ -297,6 +297,7 @@ def gameplay(obj1, obj2):               #game simulator
 
 
 import team54
+import aiBot6
 
 if __name__ == '__main__':
 
@@ -319,54 +320,21 @@ if __name__ == '__main__':
     elif option == '3':
         obj1 = Manual_Player()
         obj2 = Manual_Player()
-    elif option == 'TR':
-        obj1 = team54.Player54()
-        obj2 = Random_Player()
-    elif option == 'RT':
-        obj1 = Random_Player()
-        obj2 = team54.Player54()
-    elif option == 'TM':
-        obj1 = team54.Player54()
-        obj2 = Manual_Player()
-    elif option == 'TT':
-        if len(sys.argv) < 4:
-            print "argument error"
-            sys.exit(1)
-        obj1 = team54.Player54(int(sys.argv[2]))
-        obj2 = team54.Player54(int(sys.argv[3]))
-    elif option[0] == 'O' or option[1] == 'O':
-        if len(sys.argv) < 3:
-            print "argument error"
-            sys.exit(1)
-
-        opp = __import__(sys.argv[2])
-        if option == 'OO':
-            if len(sys.argv) < 4:
-                print 'argument error'
-                sys.exit(1)
-            obj1 = opp.Player54()
-            obj2 = __import__(sys.argv[3]).Player54()
-        else:
-            if len(sys.argv) == 3:
-                opp = opp.Player54()
-            else:
-                opp = eval('opp.' + sys.argv[3] + '(6)')
-
-            if option == 'TO':
-                obj1 = team54.Player54()
-                obj2 = opp
-            elif option == 'OT':
-                obj1 = opp
-                obj2 = team54.Player54()
-            elif option == 'OR':
-                obj1 = opp
-                obj2 = Random_Player()
-            elif option == 'RO':
-                obj1 = Random_Player()
-                obj2 = opp
     else:
-        print 'Invalid option'
-        sys.exit(1)
+        T = team54.Player54()
+        R = Random_Player()
+        S = aiBot6.aiBot(6)
+        if option[0] == 'O' or option[1] == 'O':
+            if len(sys.argv) < 3:
+                print "argument error"
+                sys.exit(1)
+            O = __import__(sys.argv[2])
+            if len(sys.argv) == 3:
+                O = O.Player54()
+            else:
+                O = eval('O.' + sys.argv[3])
+        obj1 = eval(option[0])
+        obj2 = eval(option[1])
 
     x = gameplay(obj1, obj2)
     print "Player 1 points:", x[0]
