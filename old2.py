@@ -40,7 +40,7 @@ def evaluate(board, flag):
             # assert(my_game_score >= 0 and opp_game_score >= 0)
             game_score += my_game_score - opp_game_score
 
-    return WEIGHT_ATTACK*attack_score + WEIGHT_GAME*game_score
+    return (WEIGHT_ATTACK*attack_score + WEIGHT_GAME*game_score, my_block_score, opp_block_score)
 
 def get_attack_score(score_cell, score_pair, score_triple, count):
     score = 0

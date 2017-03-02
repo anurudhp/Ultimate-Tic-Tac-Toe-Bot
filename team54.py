@@ -16,7 +16,7 @@ WEIGHT_ATTACK = 1000
 WEIGHT_GAME = 1
 
 class Player54():
-    def __init__(self, max_depth = 20, max_breadth = 4*16**3, must_prune = True):
+    def __init__(self, max_depth = 3, max_breadth = 16**3, must_prune = True):
         self.max_depth = max_depth
         self.max_breadth = max_breadth
         self.must_prune = must_prune
@@ -44,7 +44,7 @@ class Player54():
         # create copy and bind functions
 
         # debug: timing
-        # start_time = time.time()
+        start_time = time.time()
 
         if self.board == None:
             opp_flag = 'x' if flag == 'o' else 'o'
@@ -54,7 +54,9 @@ class Player54():
         self.advance(old_move, self.min_flag, False)
 
         # search
+        self.state_count = 0
         move_score, move_choice = self.minimax(old_move, flag, self.min_flag)
+
         # print move_score, move_choice
 
         self.advance(move_choice, flag, True)
@@ -63,14 +65,16 @@ class Player54():
         self.board.block_status[x >> 2][y >> 2] = '-'
 
         # debug: timing
-        # end_time = time.time()
-        # delta_time = end_time - start_time
+        end_time = time.time()
+        delta_time = end_time - start_time
         # self.max_time = max(self.max_time, delta_time)
         # self.total_time += delta_time
         # self.total_moves += 1
         # sys.stderr.write(">> Current move time " + str(delta_time) + "\n")
         # sys.stderr.write(">> Average move time " + str(self.total_time / self.total_moves) + "\n")
         # sys.stderr.write(">> Maximum move time " + str(self.max_time) + "\n\n")
+        sys.stderr.write(">>> number of states " + str(self.state_count) + "\n")
+        sys.stderr.write(">>> avg. time per state " + str(delta_time / self.state_count) + "\n\n")
 
         return move_choice
 
@@ -88,6 +92,7 @@ class Player54():
 
     # search functions
     def minimax(self, prev_move, flag, opp_flag, depth = 0, breadth = 1, alpha = -INFINITY, beta = +INFINITY):
+        self.state_count += 1
         if depth >= self.max_depth or breadth > self.max_breadth:
             return self.heuristic_estimate
 
@@ -134,14 +139,15 @@ class Player54():
 
     # undo a move, and update the heuristic estimate
     def backtrack(self, current_move, flag):
-        x, y = current_move
-        row, col = x / 4, y / 4
+        if current_move[0] != -1:
+            x, y = current_move
+            row, col = x / 4, y / 4
 
-        self.board.board_status[x][y] = '-'
-        self.board.block_status[row][col] = '-'
+            self.board.board_status[x][y] = '-'
+            self.board.block_status[row][col] = '-'
 
-        x, y = x % 4, y % 4
-        self.update_heuristic(row, col, x, y)
+            x, y = x % 4, y % 4
+            self.update_heuristic(row, col, x, y)
 
     def update_heuristic(self, row, col, x, y):
         self.attack_score -= (self.my_block_score[row][col] - self.opp_block_score[row][col])
@@ -182,8 +188,6 @@ class Player54():
                 game_score += (my_game_score - opp_game_score)
 
         # end change
-
-
         self.heuristic_estimate = WEIGHT_ATTACK*self.attack_score + WEIGHT_GAME*game_score
 
         return False
