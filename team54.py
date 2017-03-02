@@ -16,7 +16,7 @@ WEIGHT_ATTACK = 1000
 WEIGHT_GAME = 1
 
 class Player54():
-    def __init__(self, max_depth = 20, max_breadth = 4*16**2, must_prune = True):
+    def __init__(self, max_depth = 20, max_breadth = 4*16**3, must_prune = True):
         self.max_depth = max_depth
         self.max_breadth = max_breadth
         self.must_prune = must_prune
