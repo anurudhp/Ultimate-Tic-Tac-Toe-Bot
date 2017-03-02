@@ -30,13 +30,13 @@ opp_total=0
 games=0
 
 while :; do
-	output=$(python simulator.py $@ | tail -n 2)
-	my_score=$(echo $output | awk '{ print $4 }')
-	opp_score=$(echo $output | awk '{ print $8 }')
+	output=$(python simulator.py $@ | tail -n 4)
+	result_message=$(echo $output | awk '{ print $2 }')
+	my_score=$(echo $output | awk '{ print $12 }')
+	opp_score=$(echo $output | awk '{ print $16 }')
 	my_total=$((my_total + my_score))
 	opp_total=$((opp_total + opp_score))
 	games=$((games + 1))
 	diff=$((my_total - opp_total))
-	echo -e "$my_total - $opp_total | $games games | average: $(div $my_total $games) - $(div $opp_total $games) | diff: $(div $diff $games) [$@] ($my_score - $opp_score)"
+	echo -e "$my_total - $opp_total | $games games | average: $(div $my_total $games) - $(div $opp_total $games) | diff: $(div $diff $games) [$@] ($my_score - $opp_score) {$result_message}"
 done
-

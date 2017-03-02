@@ -1,5 +1,7 @@
 import random
 from copy import deepcopy
+import time
+import sys
 # import old2
 
 INFINITY = 10**18
@@ -14,7 +16,7 @@ WEIGHT_ATTACK = 1000
 WEIGHT_GAME = 1
 
 class Player54():
-    def __init__(self, max_depth = 3, max_breadth = 16**10, must_prune = True):
+    def __init__(self, max_depth = 20, max_breadth = 4*16**2, must_prune = True):
         self.max_depth = max_depth
         self.max_breadth = max_breadth
         self.must_prune = must_prune
@@ -30,10 +32,19 @@ class Player54():
         self.opp_block_score = [4*[0] for i in xrange(4)]
         self.attack_score = 0
 
+        # debug: timing
+        # self.move_times = []
+        # self.max_time = 0
+        # self.total_time = 0
+        # self.total_moves = 0
+
         random.seed()
 
     def move(self, board, old_move, flag):
         # create copy and bind functions
+
+        # debug: timing
+        # start_time = time.time()
 
         if self.board == None:
             opp_flag = 'x' if flag == 'o' else 'o'
@@ -44,12 +55,22 @@ class Player54():
 
         # search
         move_score, move_choice = self.minimax(old_move, flag, self.min_flag)
-        print move_score, move_choice
+        # print move_score, move_choice
 
         self.advance(move_choice, flag, True)
         x, y = move_choice
         self.board.board_status[x][y] = '-'
         self.board.block_status[x >> 2][y >> 2] = '-'
+
+        # debug: timing
+        # end_time = time.time()
+        # delta_time = end_time - start_time
+        # self.max_time = max(self.max_time, delta_time)
+        # self.total_time += delta_time
+        # self.total_moves += 1
+        # sys.stderr.write(">> Current move time " + str(delta_time) + "\n")
+        # sys.stderr.write(">> Average move time " + str(self.total_time / self.total_moves) + "\n")
+        # sys.stderr.write(">> Maximum move time " + str(self.max_time) + "\n\n")
 
         return move_choice
 
@@ -67,7 +88,7 @@ class Player54():
 
     # search functions
     def minimax(self, prev_move, flag, opp_flag, depth = 0, breadth = 1, alpha = -INFINITY, beta = +INFINITY):
-        if depth >= self.max_depth: # or breadth > self.max_breadth:
+        if depth >= self.max_depth or breadth > self.max_breadth:
             return self.heuristic_estimate
 
         valid_moves = self.board.find_valid_move_cells(prev_move)
@@ -115,7 +136,7 @@ class Player54():
     def backtrack(self, current_move, flag):
         x, y = current_move
         row, col = x / 4, y / 4
-        
+
         self.board.board_status[x][y] = '-'
         self.board.block_status[row][col] = '-'
 
@@ -152,7 +173,7 @@ class Player54():
         elif opp_game_count == True:
             self.heuristic_estimate = -INFINITY
             return True
-        
+
         game_score = 0
         for i in xrange(4):
             for j in xrange(4):

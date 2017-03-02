@@ -276,6 +276,7 @@ def gameplay(obj1, obj2):               #game simulator
     game_board.print_board()
 
     print "Winner:", WINNER
+    MESSAGE = MESSAGE.replace(' ', '_')
     print "Message", MESSAGE
 
     x = 0
