@@ -297,7 +297,9 @@ def gameplay(obj1, obj2):               #game simulator
 
 
 import team54
-import aiBot6
+import team52
+# import aiBot8
+# import bot1
 
 if __name__ == '__main__':
 
@@ -323,7 +325,9 @@ if __name__ == '__main__':
     else:
         T = team54.Player54()
         R = Random_Player()
-        S = aiBot6.aiBot(6)
+        # S = aiBot8.aiBot(6)
+        # K = bot1.Manual_Player()
+        X = team52.Player52()
         if option[0] == 'O' or option[1] == 'O':
             if len(sys.argv) < 3:
                 print "argument error"
@@ -333,8 +337,8 @@ if __name__ == '__main__':
                 O = O.Player54()
             else:
                 O = eval('O.' + sys.argv[3])
-        obj1 = eval(option[0])
-        obj2 = eval(option[1])
+        obj1 = copy.deepcopy(eval(option[0]))
+        obj2 = copy.deepcopy(eval(option[1]))
 
     x = gameplay(obj1, obj2)
     print "Player 1 points:", x[0]
