@@ -16,7 +16,7 @@ WEIGHT_ATTACK = 1000
 WEIGHT_GAME = 1
 
 class Player54():
-    def __init__(self, max_depth = 20, max_breadth = 16**4, must_prune = True):
+    def __init__(self, max_depth = 20, max_breadth = 4*16**3, must_prune = True):
         self.max_depth = max_depth
         self.max_breadth = max_breadth
         self.must_prune = must_prune
@@ -75,9 +75,9 @@ class Player54():
         # sys.stderr.write(">> Current move time " + str(delta_time) + "\n")
         # sys.stderr.write(">> Average move time " + str(self.total_time / self.total_moves) + "\n")
         # sys.stderr.write(">> Maximum move time " + str(self.max_time) + "\n\n")
-        sys.stderr.write(">>> number of states " + str(self.state_count) + "\n")
-        sys.stderr.write(">>> avg. time per state " + str(delta_time / self.state_count) + "\n\n")
-
+        # sys.stderr.write(">>> number of states " + str(self.state_count) + "\n")
+        # sys.stderr.write(">>> avg. time per state " + str(delta_time / self.state_count) + "\n\n")
+        
         return move_choice
 
     def check(self):

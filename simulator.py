@@ -298,8 +298,10 @@ def gameplay(obj1, obj2):               #game simulator
 
 
 import team54
-import team52
-# import aiBot8
+import team57
+import aiBot8
+# import vta
+import AIBOB
 # import bot1
 
 if __name__ == '__main__':
@@ -325,10 +327,13 @@ if __name__ == '__main__':
         obj2 = Manual_Player()
     else:
         T = team54.Player54()
+        # X = team54.Player54()
         R = Random_Player()
-        # S = aiBot8.aiBot(6)
+        S = aiBot8.aiBot(6)
         # K = bot1.Manual_Player()
-        X = team52.Player52()
+        K = AIBOB.AI_BOT(4)
+        # V = vta.Two_Dudes()
+        X = team54.Player54()
         if option[0] == 'O' or option[1] == 'O':
             if len(sys.argv) < 3:
                 print "argument error"
