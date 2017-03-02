@@ -25,7 +25,7 @@ class Player54():
         self.min_flag = None
         self.board = None
         self.heuristic_estimate = 0
-        self.count_template = [[3*[0] for i in xrange(4)] for i in xrange(4)]
+        # self.count_template = [[3*[0] for i in xrange(4)] for i in xrange(4)]
 
         # heuristic scoring values
         self.my_block_score = [4*[0] for i in xrange(4)]
@@ -37,7 +37,7 @@ class Player54():
         # self.max_time = 0
         # self.total_time = 0
         # self.total_moves = 0
-        self.ans = [0,0,0,0]
+        self.ans = [0, 0, 0, 0]
 
         random.seed()
 
@@ -241,7 +241,7 @@ class Player54():
         # count = deepcopy(self.count_template)
         count = [[3*[0] for i in xrange(4)] for i in xrange(4)]
 
-        block_won = False
+        # block_won = False
         # rows
         for i in xrange(u, d):
             if self.update_count(count, grid, flag, ((i, l), (i, l + 1), (i, l + 2), (i, l + 3))):
