@@ -37,10 +37,12 @@ class Player54():
         # self.max_time = 0
         # self.total_time = 0
         # self.total_moves = 0
+        self.ans = [0,0,0,0]
 
         random.seed()
 
     def move(self, board, old_move, flag):
+        self.state_count = 0
         # create copy and bind functions
 
         # debug: timing
@@ -54,7 +56,7 @@ class Player54():
         self.advance(old_move, self.min_flag, False)
 
         # search
-        self.state_count = 0
+
         move_score, move_choice = self.minimax(old_move, flag, self.min_flag)
 
         # print move_score, move_choice
@@ -92,7 +94,6 @@ class Player54():
 
     # search functions
     def minimax(self, prev_move, flag, opp_flag, depth = 0, breadth = 1, alpha = -INFINITY, beta = +INFINITY):
-        self.state_count += 1
         if depth >= self.max_depth or breadth > self.max_breadth:
             return self.heuristic_estimate
 
@@ -129,6 +130,7 @@ class Player54():
 
     # play a move, and update the heuristic estimate
     def advance(self, current_move, flag, apply_move = True):
+        self.state_count += 1
         if current_move[0] != -1:
             x, y = current_move
             row, col = x / 4, y / 4
@@ -207,19 +209,28 @@ class Player54():
             return score_pair*(count[1]**2) + score_triple*(count[2]**2)
 
     def update_count(self, count, grid, flag, posList):
-        ans = []
+        ans = self.ans
+        # [0,0,0,0]
+        ln = 0
         for pos in posList:
             # print pos
             elem = grid[pos[0]][pos[1]]
             if elem == '-':
-                ans.append(pos)
+                # ans.append(pos)
+                ans[ln] = pos
+                ln += 1
             elif elem != flag:
                 return False
-        if len(ans) == 0:
+        # if len(ans) == 0:
+        if ln == 0:
             return True
-        elif len(ans) != 4:
-            for pos in ans:
-                count[pos[0] % 4][pos[1] % 4][len(ans) - 1] += 1
+        # elif len(ans) != 4:
+        elif ln != 4:
+            # for pos in ans:
+            for i in xrange(ln):
+                pos = ans[i]
+                # count[pos[0] % 4][pos[1] % 4][len(ans) - 1] += 1
+                count[pos[0] % 4][pos[1] % 4][ln - 1] += 1
         return False
 
     def count_attacks(self, grid, flag, row, col):
@@ -227,7 +238,8 @@ class Player54():
         r = l + 4
         u = 4*row
         d = u + 4
-        count = deepcopy(self.count_template)
+        # count = deepcopy(self.count_template)
+        count = [[3*[0] for i in xrange(4)] for i in xrange(4)]
 
         block_won = False
         # rows
