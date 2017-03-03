@@ -47,8 +47,8 @@ class Player54():
         self.advance(old_move, self.min_flag, False)
 
         # search
-        self.max_depth = START_DEPTH
-        while True:
+        self.max_depth = 1
+        for i in xrange(256):
             current_ans = self.minimax(old_move, flag, self.min_flag)
             if current_ans == None:
                 break
@@ -82,6 +82,8 @@ class Player54():
             return None
 
         valid_moves = self.board.find_valid_move_cells(prev_move)
+        if len(valid_moves) == 0:
+            return self.heuristic_estimate
         if depth == 0: random.shuffle(valid_moves)
 
         final_score = None
