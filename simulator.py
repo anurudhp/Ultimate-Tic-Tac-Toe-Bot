@@ -11,7 +11,8 @@ class TimedOutExc(Exception):
 
 def handler(signum, frame):
     #print 'Signal handler called with signal', signum
-    raise TimedOutExc()
+    # raise TimedOutExc()
+    pass
 
 class Random_Player():
     def __init__(self):
@@ -185,7 +186,7 @@ def gameplay(obj1, obj2):               #game simulator
         temp_board_status = copy.deepcopy(game_board.board_status)
         temp_block_status = copy.deepcopy(game_board.block_status)
         signal.alarm(TIME)
-
+        start_time = time.time()
         try:                                    #try to get player 1's move
             p1_move = obj1.move(game_board, old_move, fl1)
         except TimedOutExc:                 #timeout error
@@ -194,6 +195,9 @@ def gameplay(obj1, obj2):               #game simulator
             MESSAGE = 'TIME OUT'
             pts2 = 16
             break
+        end_time = time.time()
+        print "!!! time =", end_time - start_time
+        if end_time - start_time > 16: exit(0)
         # except Exception as e:
         #   print e # DEBUG
         #   WINNER = 'P2'
@@ -234,6 +238,7 @@ def gameplay(obj1, obj2):               #game simulator
         temp_block_status = copy.deepcopy(game_board.block_status)
         signal.alarm(TIME)
 
+        start_time = time.time()
         try:
             p2_move = obj2.move(game_board, old_move, fl2)
         except TimedOutExc:
@@ -248,6 +253,10 @@ def gameplay(obj1, obj2):               #game simulator
             pts1 = 16
             break
         signal.alarm(0)
+        end_time = time.time()
+        print "!!! time =", end_time - start_time
+        if end_time - start_time > 16: exit(0)
+
         if (game_board.block_status != temp_block_status) or (game_board.board_status != temp_board_status):
             WINNER = 'P1'
             MESSAGE = 'MODIFIED THE BOARD'

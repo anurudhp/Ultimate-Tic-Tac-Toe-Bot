@@ -2,6 +2,9 @@ import random
 from copy import deepcopy
 import time
 import sys
+
+import signal
+signal.signal(signal.SIGINT, lambda x,y: sys.exit(0))
 # import old2
 
 INFINITY = 10**18
@@ -16,7 +19,7 @@ WEIGHT_ATTACK = 1000
 WEIGHT_GAME = 1
 
 class Player54():
-    def __init__(self, max_depth = 20, max_breadth = 4*16**3, must_prune = True):
+    def __init__(self, max_depth = 4, max_breadth = 4*16**3, must_prune = True):
         self.max_depth = max_depth
         self.max_breadth = max_breadth
         self.must_prune = must_prune
@@ -25,28 +28,20 @@ class Player54():
         self.min_flag = None
         self.board = None
         self.heuristic_estimate = 0
-        # self.count_template = [[3*[0] for i in xrange(4)] for i in xrange(4)]
 
         # heuristic scoring values
         self.my_block_score = [4*[0] for i in xrange(4)]
         self.opp_block_score = [4*[0] for i in xrange(4)]
         self.attack_score = 0
 
-        # debug: timing
-        # self.move_times = []
-        # self.max_time = 0
-        # self.total_time = 0
-        # self.total_moves = 0
         self.ans = [0, 0, 0, 0]
+        self.start_time = 0
 
-        random.seed()
+        random.seed(42)
 
     def move(self, board, old_move, flag):
-        self.state_count = 0
-        # create copy and bind functions
-
-        # debug: timing
-        start_time = time.time()
+        self.start_time = time.time()
+        print old_move[0], old_move[1]
 
         if self.board == None:
             opp_flag = 'x' if flag == 'o' else 'o'
@@ -56,28 +51,25 @@ class Player54():
         self.advance(old_move, self.min_flag, False)
 
         # search
-
-        move_score, move_choice = self.minimax(old_move, flag, self.min_flag)
-
-        # print move_score, move_choice
+        prev_search_time = 0
+        self.max_depth = 3
+        while True:
+            start_time = time.time()
+            current_ans = self.minimax(old_move, flag, self.min_flag)
+            if current_ans == None:
+                break
+            move_score, move_choice = current_ans
+            end_time = time.time()
+            prev_search_time = end_time - start_time
+            self.max_depth += 1
+        sys.stderr.write(">>> move time = " + str(time.time() - self.start_time) + "\n")
+        sys.stderr.write(">>> depth = " + str(self.max_depth - 1) + "\n")
 
         self.advance(move_choice, flag, True)
         x, y = move_choice
         self.board.board_status[x][y] = '-'
         self.board.block_status[x >> 2][y >> 2] = '-'
 
-        # debug: timing
-        end_time = time.time()
-        delta_time = end_time - start_time
-        # self.max_time = max(self.max_time, delta_time)
-        # self.total_time += delta_time
-        # self.total_moves += 1
-        # sys.stderr.write(">> Current move time " + str(delta_time) + "\n")
-        # sys.stderr.write(">> Average move time " + str(self.total_time / self.total_moves) + "\n")
-        # sys.stderr.write(">> Maximum move time " + str(self.max_time) + "\n\n")
-        # sys.stderr.write(">>> number of states " + str(self.state_count) + "\n")
-        # sys.stderr.write(">>> avg. time per state " + str(delta_time / self.state_count) + "\n\n")
-        
         return move_choice
 
     def check(self):
@@ -94,7 +86,9 @@ class Player54():
 
     # search functions
     def minimax(self, prev_move, flag, opp_flag, depth = 0, breadth = 1, alpha = -INFINITY, beta = +INFINITY):
-        if depth >= self.max_depth or breadth > self.max_breadth:
+        if depth <= 3 and time.time() - self.start_time > 14.0:
+            return None
+        if depth >= self.max_depth:
             return self.heuristic_estimate
 
         valid_moves = self.board.find_valid_move_cells(prev_move)
@@ -111,6 +105,8 @@ class Player54():
                 current_score = self.minimax(current_move, opp_flag, flag, depth + 1, next_breadth, alpha, beta)
 
             self.backtrack(current_move, flag)
+            if current_score == None:
+                return None
 
             if flag == self.max_flag:
                 if final_score is None or final_score < current_score:
@@ -130,7 +126,6 @@ class Player54():
 
     # play a move, and update the heuristic estimate
     def advance(self, current_move, flag, apply_move = True):
-        self.state_count += 1
         if current_move[0] != -1:
             x, y = current_move
             row, col = x / 4, y / 4
