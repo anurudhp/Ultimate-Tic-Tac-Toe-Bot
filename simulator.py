@@ -312,7 +312,7 @@ def gameplay(obj1, obj2):               #game simulator
 
 import team54
 import team57
-import aiBot8
+import aiBot6
 # import vta
 import AIBOB
 # import bot1
@@ -342,7 +342,7 @@ if __name__ == '__main__':
         T = team54.Player54()
         # X = team54.Player54()
         R = Random_Player()
-        S = aiBot8.aiBot(6)
+        S = aiBot6.aiBot(6)
         # K = bot1.Manual_Player()
         K = AIBOB.AI_BOT(4)
         # V = vta.Two_Dudes()
