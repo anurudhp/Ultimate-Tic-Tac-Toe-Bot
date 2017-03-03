@@ -197,7 +197,9 @@ def gameplay(obj1, obj2):               #game simulator
             break
         end_time = time.time()
         print "!!! time =", end_time - start_time
-        if end_time - start_time > 16: exit(0)
+        if end_time - start_time > TIME:
+            print "TIMED OUT!!!"
+            exit(0)
         # except Exception as e:
         #   print e # DEBUG
         #   WINNER = 'P2'
@@ -236,7 +238,7 @@ def gameplay(obj1, obj2):               #game simulator
         #do the same thing for player 2
         temp_board_status = copy.deepcopy(game_board.board_status)
         temp_block_status = copy.deepcopy(game_board.block_status)
-        signal.alarm(TIME)
+        # signal.alarm(TIME)
 
         start_time = time.time()
         try:
@@ -255,7 +257,9 @@ def gameplay(obj1, obj2):               #game simulator
         signal.alarm(0)
         end_time = time.time()
         print "!!! time =", end_time - start_time
-        if end_time - start_time > 16: exit(0)
+        if end_time - start_time > TIME:
+            print "TIMED OUT!!!"
+            exit(0)
 
         if (game_board.block_status != temp_block_status) or (game_board.board_status != temp_board_status):
             WINNER = 'P1'

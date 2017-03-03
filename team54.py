@@ -1,5 +1,6 @@
 import random
 from copy import deepcopy
+from time import time
 
 
 INFINITY = 10**18
@@ -14,10 +15,8 @@ WEIGHT_ATTACK = 1000
 WEIGHT_GAME = 1
 
 class Player54():
-    def __init__(self, max_depth = 4, max_breadth = 4*16**3, must_prune = True):
-        self.max_depth = max_depth
-        self.max_breadth = max_breadth
-        self.must_prune = must_prune
+    def __init__(self):
+        self.max_depth = 0
 
         self.max_flag = None
         self.min_flag = None
@@ -35,7 +34,7 @@ class Player54():
         random.seed()
 
     def move(self, board, old_move, flag):
-        self.start_time = time.time()
+        self.start_time = time()
         print old_move[0], old_move[1]
 
         if self.board == None:
@@ -46,16 +45,12 @@ class Player54():
         self.advance(old_move, self.min_flag, False)
 
         # search
-        prev_search_time = 0
         self.max_depth = 3
         while True:
-            start_time = time.time()
             current_ans = self.minimax(old_move, flag, self.min_flag)
             if current_ans == None:
                 break
             move_score, move_choice = current_ans
-            end_time = time.time()
-            prev_search_time = end_time - start_time
             self.max_depth += 1
 
         self.advance(move_choice, flag, True)
@@ -78,10 +73,10 @@ class Player54():
             assert(hdiff == 0)
 
     # search functions
-    def minimax(self, prev_move, flag, opp_flag, depth = 0, breadth = 1, alpha = -INFINITY, beta = +INFINITY):
+    def minimax(self, prev_move, flag, opp_flag, depth = 0, alpha = -INFINITY, beta = +INFINITY):
         if depth >= self.max_depth:
             return self.heuristic_estimate
-        if time.time() - self.start_time > 14.0:
+        if time() - self.start_time > 2.0:
             return None
 
         valid_moves = self.board.find_valid_move_cells(prev_move)
@@ -89,13 +84,12 @@ class Player54():
 
         final_score = None
         optimal_move = None
-        next_breadth = breadth * len(valid_moves)
 
         for current_move in valid_moves:
             if self.advance(current_move, flag):
                 current_score = self.heuristic_estimate
             else:
-                current_score = self.minimax(current_move, opp_flag, flag, depth + 1, next_breadth, alpha, beta)
+                current_score = self.minimax(current_move, opp_flag, flag, depth + 1, alpha, beta)
 
             self.backtrack(current_move, flag)
             if current_score == None:
@@ -112,7 +106,7 @@ class Player54():
                     optimal_move = current_move
                 beta = min(beta, final_score)
 
-            if self.must_prune and beta <= alpha: break
+            if beta <= alpha: break
 
         if depth == 0: return final_score, optimal_move
         return final_score
