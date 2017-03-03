@@ -13,6 +13,8 @@ SCORE_GAME_PAIR   = 10**3
 SCORE_GAME_TRIPLE = 10**0
 WEIGHT_ATTACK = 1000
 WEIGHT_GAME = 1
+TIME_OUT = 13.0
+START_DEPTH = 2
 
 class Player54():
     def __init__(self):
@@ -45,7 +47,7 @@ class Player54():
         self.advance(old_move, self.min_flag, False)
 
         # search
-        self.max_depth = 3
+        self.max_depth = START_DEPTH
         while True:
             current_ans = self.minimax(old_move, flag, self.min_flag)
             if current_ans == None:
@@ -76,7 +78,7 @@ class Player54():
     def minimax(self, prev_move, flag, opp_flag, depth = 0, alpha = -INFINITY, beta = +INFINITY):
         if depth >= self.max_depth:
             return self.heuristic_estimate
-        if time() - self.start_time > 13.0:
+        if time() - self.start_time > TIME_OUT:
             return None
 
         valid_moves = self.board.find_valid_move_cells(prev_move)
@@ -193,18 +195,52 @@ class Player54():
     def update_count(self, count, grid, flag, posList):
         ans = self.ans
         ln = 0
-        for pos in posList:
-            elem = grid[pos[0]][pos[1]]
-            if elem == '-':
-                ans[ln] = pos
-                ln += 1
-            elif elem != flag:
-                return False
+        # for pos in posList:
+        #     elem = grid[pos[0]][pos[1]]
+        #     if elem == '-':
+        #         ans[ln] = pos
+        #         ln += 1
+        #     elif elem != flag:
+        #         return False
+        elem = grid[posList[0][0]][posList[0][1]]
+        if elem == '-':
+            ans[ln] = posList[0]
+            ln += 1
+        elif elem != flag:
+            return False
+
+        elem = grid[posList[1][0]][posList[1][1]]
+        if elem == '-':
+            ans[ln] = posList[1]
+            ln += 1
+        elif elem != flag:
+            return False
+
+        elem = grid[posList[2][0]][posList[2][1]]
+        if elem == '-':
+            ans[ln] = posList[2]
+            ln += 1
+        elif elem != flag:
+            return False
+
+        elem = grid[posList[3][0]][posList[3][1]]
+        if elem == '-':
+            ans[ln] = posList[3]
+            ln += 1
+        elif elem != flag:
+            return False
+
         if ln == 0:
             return True
         elif ln != 4:
-            for i in xrange(ln):
-                pos = ans[i]
+            if ln > 0:
+                pos = ans[0]
+                count[pos[0] % 4][pos[1] % 4][ln - 1] += 1
+            if ln > 1:
+                pos = ans[1]
+                count[pos[0] % 4][pos[1] % 4][ln - 1] += 1
+            if ln > 2:
+                pos = ans[2]
                 count[pos[0] % 4][pos[1] % 4][ln - 1] += 1
         return False
 
@@ -216,30 +252,32 @@ class Player54():
         # count = deepcopy(self.count_template)
         count = [[3*[0] for i in xrange(4)] for i in xrange(4)]
 
+        update_count = self.update_count
+
         # rows
         # for i in xrange(u, d):
             # if self.update_count(count, grid, flag, ((i, l), (i, l + 1), (i, l + 2), (i, l + 3))):
                 # return True
-        if self.update_count(count, grid, flag, ((u, l), (u, l + 1), (u, l + 2), (u, l + 3))): return True
-        if self.update_count(count, grid, flag, ((u+1, l), (u+1, l + 1), (u+1, l + 2), (u+1, l + 3))): return True
-        if self.update_count(count, grid, flag, ((u+2, l), (u+2, l + 1), (u+2, l + 2), (u+2, l + 3))): return True
-        if self.update_count(count, grid, flag, ((u+3, l), (u+3, l + 1), (u+3, l + 2), (u+3, l + 3))): return True
+        if update_count(count, grid, flag, ((u, l), (u, l + 1), (u, l + 2), (u, l + 3))): return True
+        if update_count(count, grid, flag, ((u+1, l), (u+1, l + 1), (u+1, l + 2), (u+1, l + 3))): return True
+        if update_count(count, grid, flag, ((u+2, l), (u+2, l + 1), (u+2, l + 2), (u+2, l + 3))): return True
+        if update_count(count, grid, flag, ((u+3, l), (u+3, l + 1), (u+3, l + 2), (u+3, l + 3))): return True
 
         # cols
         # for j in xrange(l, r):
-        #     if self.update_count(count, grid, flag, ((u, j), (u + 1, j), (u + 2, j), (u + 3, j))):
+        #     if update_count(count, grid, flag, ((u, j), (u + 1, j), (u + 2, j), (u + 3, j))):
         #         return True
-        if self.update_count(count, grid, flag, ((u, l), (u + 1, l), (u + 2, l), (u + 3, l))): return True
-        if self.update_count(count, grid, flag, ((u, l+1), (u + 1, l+1), (u + 2, l+1), (u + 3, l+1))): return True
-        if self.update_count(count, grid, flag, ((u, l+2), (u + 1, l+2), (u + 2, l+2), (u + 3, l+2))): return True
-        if self.update_count(count, grid, flag, ((u, l+3), (u + 1, l+3), (u + 2, l+3), (u + 3, l+3))): return True
+        if update_count(count, grid, flag, ((u, l), (u + 1, l), (u + 2, l), (u + 3, l))): return True
+        if update_count(count, grid, flag, ((u, l+1), (u + 1, l+1), (u + 2, l+1), (u + 3, l+1))): return True
+        if update_count(count, grid, flag, ((u, l+2), (u + 1, l+2), (u + 2, l+2), (u + 3, l+2))): return True
+        if update_count(count, grid, flag, ((u, l+3), (u + 1, l+3), (u + 2, l+3), (u + 3, l+3))): return True
 
         # main diagonal
-        if self.update_count(count, grid, flag, ((u, l + 3), (u + 1, l + 2), (u + 2, l + 1), (u + 3, l))):
+        if update_count(count, grid, flag, ((u, l + 3), (u + 1, l + 2), (u + 2, l + 1), (u + 3, l))):
             return True
 
         # back diagonal
-        if self.update_count(count, grid, flag, ((u, l), (u + 1, l + 1), (u + 2, l + 2), (u + 3, l + 3))):
+        if update_count(count, grid, flag, ((u, l), (u + 1, l + 1), (u + 2, l + 2), (u + 3, l + 3))):
             return True
 
         return count
