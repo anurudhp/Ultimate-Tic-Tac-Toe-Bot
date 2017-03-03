@@ -192,26 +192,19 @@ class Player54():
 
     def update_count(self, count, grid, flag, posList):
         ans = self.ans
-        # [0,0,0,0]
         ln = 0
         for pos in posList:
-            # print pos
             elem = grid[pos[0]][pos[1]]
             if elem == '-':
-                # ans.append(pos)
                 ans[ln] = pos
                 ln += 1
             elif elem != flag:
                 return False
-        # if len(ans) == 0:
         if ln == 0:
             return True
-        # elif len(ans) != 4:
         elif ln != 4:
-            # for pos in ans:
             for i in xrange(ln):
                 pos = ans[i]
-                # count[pos[0] % 4][pos[1] % 4][len(ans) - 1] += 1
                 count[pos[0] % 4][pos[1] % 4][ln - 1] += 1
         return False
 
@@ -223,16 +216,23 @@ class Player54():
         # count = deepcopy(self.count_template)
         count = [[3*[0] for i in xrange(4)] for i in xrange(4)]
 
-        # block_won = False
         # rows
-        for i in xrange(u, d):
-            if self.update_count(count, grid, flag, ((i, l), (i, l + 1), (i, l + 2), (i, l + 3))):
-                return True
+        # for i in xrange(u, d):
+            # if self.update_count(count, grid, flag, ((i, l), (i, l + 1), (i, l + 2), (i, l + 3))):
+                # return True
+        if self.update_count(count, grid, flag, ((u, l), (u, l + 1), (u, l + 2), (u, l + 3))): return True
+        if self.update_count(count, grid, flag, ((u+1, l), (u+1, l + 1), (u+1, l + 2), (u+1, l + 3))): return True
+        if self.update_count(count, grid, flag, ((u+2, l), (u+2, l + 1), (u+2, l + 2), (u+2, l + 3))): return True
+        if self.update_count(count, grid, flag, ((u+3, l), (u+3, l + 1), (u+3, l + 2), (u+3, l + 3))): return True
 
         # cols
-        for j in xrange(l, r):
-            if self.update_count(count, grid, flag, ((u, j), (u + 1, j), (u + 2, j), (u + 3, j))):
-                return True
+        # for j in xrange(l, r):
+        #     if self.update_count(count, grid, flag, ((u, j), (u + 1, j), (u + 2, j), (u + 3, j))):
+        #         return True
+        if self.update_count(count, grid, flag, ((u, l), (u + 1, l), (u + 2, l), (u + 3, l))): return True
+        if self.update_count(count, grid, flag, ((u, l+1), (u + 1, l+1), (u + 2, l+1), (u + 3, l+1))): return True
+        if self.update_count(count, grid, flag, ((u, l+2), (u + 1, l+2), (u + 2, l+2), (u + 3, l+2))): return True
+        if self.update_count(count, grid, flag, ((u, l+3), (u + 1, l+3), (u + 2, l+3), (u + 3, l+3))): return True
 
         # main diagonal
         if self.update_count(count, grid, flag, ((u, l + 3), (u + 1, l + 2), (u + 2, l + 1), (u + 3, l))):
