@@ -1,11 +1,6 @@
 import random
 from copy import deepcopy
-import time
-import sys
 
-import signal
-signal.signal(signal.SIGINT, lambda x,y: sys.exit(0))
-# import old2
 
 INFINITY = 10**18
 SCORE_BLOCK  = 10**9
@@ -37,7 +32,7 @@ class Player54():
         self.ans = [0, 0, 0, 0]
         self.start_time = 0
 
-        random.seed(42)
+        random.seed()
 
     def move(self, board, old_move, flag):
         self.start_time = time.time()
@@ -62,8 +57,6 @@ class Player54():
             end_time = time.time()
             prev_search_time = end_time - start_time
             self.max_depth += 1
-        sys.stderr.write(">>> move time = " + str(time.time() - self.start_time) + "\n")
-        sys.stderr.write(">>> depth = " + str(self.max_depth - 1) + "\n")
 
         self.advance(move_choice, flag, True)
         x, y = move_choice
@@ -86,10 +79,10 @@ class Player54():
 
     # search functions
     def minimax(self, prev_move, flag, opp_flag, depth = 0, breadth = 1, alpha = -INFINITY, beta = +INFINITY):
-        if depth <= 3 and time.time() - self.start_time > 14.0:
-            return None
         if depth >= self.max_depth:
             return self.heuristic_estimate
+        if time.time() - self.start_time > 14.0:
+            return None
 
         valid_moves = self.board.find_valid_move_cells(prev_move)
         if depth == 0: random.shuffle(valid_moves)
