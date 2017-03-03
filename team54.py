@@ -37,7 +37,6 @@ class Player54():
 
     def move(self, board, old_move, flag):
         self.start_time = time()
-        print old_move[0], old_move[1]
 
         if self.board == None:
             opp_flag = 'x' if flag == 'o' else 'o'
