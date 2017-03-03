@@ -76,7 +76,7 @@ class Player54():
     def minimax(self, prev_move, flag, opp_flag, depth = 0, alpha = -INFINITY, beta = +INFINITY):
         if depth >= self.max_depth:
             return self.heuristic_estimate
-        if time() - self.start_time > 2.0:
+        if time() - self.start_time > 13.0:
             return None
 
         valid_moves = self.board.find_valid_move_cells(prev_move)
